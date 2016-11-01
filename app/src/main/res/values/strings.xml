@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Werwolf</string>
+
+    <!-- - - - - - - - - - - - - - StartActivity - - - - - - - - - - - - - -->
+    <string name="display_name">Anzeigename</string>
+    <string name="join_lobby">Lobby beitreten</string>
+    <string name="join">beitreten</string>
+    <string name="create_lobby">Lobby erstellen</string>
+    <string name="create">erstellen</string>
+    <string name="name">Name</string>
+    <string name="password">Passwort</string>
+    <string name="limit_players">Spieler begrenzen</string>
+    <string name="limit_players_to">auf</string>
+
 </resources>
