@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="com.woodplantation.werwolf.WikiActivity"
+    tools:context="com.woodplantation.werwolf.activities.WikiActivity"
     tools:showIn="@layout/activity_wiki">
 
     <LinearLayout
@@ -49,7 +49,7 @@
                 android:text="@string/villager" />
 
             <com.woodplantation.werwolf.graphics.MyButton
-                android:id="@+id/villager"
+                android:id="@+id/wiki_villager"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -70,7 +70,7 @@
                 android:text="@string/werewolf" />
 
             <com.woodplantation.werwolf.graphics.MyButton
-                android:id="@+id/werewolf"
+                android:id="@+id/wiki_werewolf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"

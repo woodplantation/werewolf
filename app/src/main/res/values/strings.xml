@@ -1,18 +1,25 @@
 <resources>
     <string name="app_name">Werwolf</string>
 
+    <string name="ok">OK</string>
+
     <!-- - - - - - - - - - - - - - StartActivity - - - - - - - - - - - - - -->
     <string name="display_name">Anzeigename</string>
     <string name="join_lobby">Lobby beitreten</string>
     <string name="join">beitreten</string>
     <string name="create_lobby">Lobby erstellen</string>
-    <string name="create">erstellen</string>
-    <string name="name">Name</string>
+    <string name="address">Adresse</string>
     <string name="password">Passwort</string>
     <string name="limit_players">Spieler begrenzen</string>
     <string name="limit_players_to">auf</string>
     <string name="title_activity_wiki">WikiActivity</string>
 
+    <!-- - - - - - - - - - - - - - LobbyActivity - - - - - - - - - - - - - -->
+    <string name="create_group_failed_title">Fehler</string>
+    <string name="create_group_failed_text">Es gab ein Problem beim Erstellen der Lobby. Bitte überprüfe Deine WLAN-Einstellungen und versuche es erneut.</string>
+    <string name="create_group_success">Die Lobby wurde erfolgreich erstellt.</string>
+    <string name="adress_x">Adresse: %1$s</string>
+    <string name="password_x">Passwort: %1$s</string>
 
     <!-- - - - - - - - - - - - - - WikiAcitvity - - - - - - - - - - - - - -->
     <string name="roles">Die Rollen</string>
@@ -20,5 +27,11 @@
     <string name="show">Info</string>
     <string name="werewolf">Werwolf</string>
 
-    <string name="villager_info">Der Dorfbewohner kann gar nichts.</string>
+    <string name="villager_info">Dorfbewohner bilden die Basisrolle des Spiels. Sie verfügen über keine speziellen Fähigkeiten und schlafen die Nacht durch.
+        Ihr Ziel ist, alle Werwölfe aus dem Dorf zu erhängen..</string>
+    <string name="werewolf_info">Die Werwölfe sind die direkten Spielkontrahenten zu den Dorfbewohnern.
+        Werwölfe wachen in der Nacht gemeinsam auf und dürfen sich ein Opfer unter den anderen Spielern suchen. Ihr Ziel ist, alle anderen zu töten..</string>
+
+    <!-- - - - - - - - - - - - - - MenuFragment - - - - - - - - - - - - - -->
+    <string name="wiki">Wiki</string>
 </resources>
