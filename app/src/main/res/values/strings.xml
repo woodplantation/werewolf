@@ -26,11 +26,22 @@
     <string name="villager">Dorfbewohner</string>
     <string name="show">Info</string>
     <string name="werewolf">Werwolf</string>
+    <string name="witch">Hexe</string>
+    <string name="hunter">Jäger</string>
+    <string name="oracle">Seher</string>
 
     <string name="villager_info">Dorfbewohner bilden die Basisrolle des Spiels. Sie verfügen über keine speziellen Fähigkeiten und schlafen die Nacht durch.
         Ihr Ziel ist, alle Werwölfe aus dem Dorf zu erhängen..</string>
     <string name="werewolf_info">Die Werwölfe sind die direkten Spielkontrahenten zu den Dorfbewohnern.
         Werwölfe wachen in der Nacht gemeinsam auf und dürfen sich ein Opfer unter den anderen Spielern suchen. Ihr Ziel ist, alle anderen zu töten..</string>
+    <string name="witch_info">Die Hexe ist eine Spezialrolle. Sie erwacht in der Nacht, wenn sie dazu aufgefordert wird, und erfährt, welche Person von den Werwölfen als Opfer ausgewählt wurde.
+        Sie besitzt einmalig über alle Nächte hinweg einen Heil- sowie einen Todestrank, den sie anwenden kann, wenn sie es möchte.
+        Wenn sie stirbt, ohne dass sie die Tränke genutzt hat, verfallen diese.</string>
+    <string name="hunter_info">Der Jäger ist eine Spezialrolle. Er schläft wie ein normaler Dorfbewohner die Nacht durch.
+        Wenn er am Tag vom Dorf gehängt wird, darf er eine weitere Person mit in den Tod ziehen, wenn er das möchte.</string>
+    <string name="oracle_info">Der Seher ist eine Spezialrolle. Er erwacht in der Nacht, wenn er dazu aufgefordert wird, und darf eine Person auswählen,
+        deren Rolle(gut oder böse) er erfahren möchte.
+        Sofern kein Gärtner im Spiel ist, der dem Seher irrtümlicherweise als Werwolf angezeigt wird, ist diese Information immer korrekt.</string>
 
     <!-- - - - - - - - - - - - - - MenuFragment - - - - - - - - - - - - - -->
     <string name="wiki">Wiki</string>

@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,6 +41,15 @@ public class WikiActivity extends AppCompatActivity {
                 break;
             case R.id.wiki_werewolf:
                 builder.setMessage(R.string.werewolf_info);
+                break;
+            case R.id.wiki_witch:
+                builder.setMessage(R.string.witch_info);
+                break;
+            case R.id.wiki_hunter:
+                builder.setMessage(R.string.hunter_info);
+                break;
+            case R.id.wiki_oracle:
+                builder.setMessage(R.string.oracle_info);
                 break;
         }
         AlertDialog dialog = builder.create();
