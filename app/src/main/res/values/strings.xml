@@ -11,5 +11,12 @@
     <string name="password">Passwort</string>
     <string name="limit_players">Spieler begrenzen</string>
     <string name="limit_players_to">auf</string>
+    <string name="title_activity_wiki">WikiActivity</string>
 
+
+    <!-- - - - - - - - - - - - - - WikiAcitvity - - - - - - - - - - - - - -->
+    <string name="roles">Die Rollen</string>
+    <string name="villager">Dorfbewohner</string>
+    <string name="show">Info</string>
+    <string name="werewolf">Werwolf</string>
 </resources>
