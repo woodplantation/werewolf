@@ -34,7 +34,7 @@
         </activity>
         <activity android:name=".activities.LobbyActivity"
             android:screenOrientation="portrait"/>
-        <service android:name=".network.Server2"
+        <service android:name=".network.Server"
             android:exported="false"/>
         <activity
             android:name=".activities.WikiActivity"

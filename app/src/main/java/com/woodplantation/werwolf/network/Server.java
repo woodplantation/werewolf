@@ -1,6 +1,5 @@
 package com.woodplantation.werwolf.network;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,7 +19,7 @@ import android.util.Log;
  * Created by Sebu on 02.11.2016.
  */
 
-public class Server2 extends Service {
+public class Server extends Service {
 
     //Commands that can be sent as intents
     public static final String COMMAND_KICK_PLAYER = "kick_player";
@@ -54,7 +53,7 @@ public class Server2 extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d("Server2","onDestroy");
+        Log.d("Server","onDestroy");
         unregisterReceiver(receiver);
         mManager.cancelConnect(mChannel, null);
         super.onDestroy();
@@ -72,7 +71,7 @@ public class Server2 extends Service {
         if (action == null) {
             return START_STICKY;
         }
-        Log.d("Server2","onHandleIntent. action: " + action);
+        Log.d("Server","onHandleIntent. action: " + action);
         switch (action) {
             case COMMAND_KICK_PLAYER: {
 
@@ -134,12 +133,12 @@ public class Server2 extends Service {
 
     private class ServerOutcomeCommunication {
 
-        private LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(Server2.this);
+        private LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(Server.this);
 
         private void createLobby(WifiP2pGroup wifiP2pGroup) {
             Log.d("ServerOutcome","create lobby. " + wifiP2pGroup);
             Intent intent = new Intent(ServerOutcomeBroadcastReceiver.LOBBY_CREATE);
-            intent.setClass(Server2.this, ServerOutcomeBroadcastReceiver.class);
+            intent.setClass(Server.this, ServerOutcomeBroadcastReceiver.class);
             if (wifiP2pGroup == null) {
                 intent.putExtra(ServerOutcomeBroadcastReceiver.EXTRA_LOBBY_CREATE_SUCESS, false);
             } else {
@@ -148,7 +147,7 @@ public class Server2 extends Service {
                 intent.putExtra(ServerOutcomeBroadcastReceiver.EXTRA_LOBBY_CREATE_PASSWORD, wifiP2pGroup.getPassphrase());
             }
             Log.d("ServerOutcome","create lobby. intent " + intent);
-            Log.d("ServerOutcome","create lobby. package " + Server2.this.getPackageName());
+            Log.d("ServerOutcome","create lobby. package " + Server.this.getPackageName());
             localBroadcastManager.sendBroadcast(intent);
         }
 

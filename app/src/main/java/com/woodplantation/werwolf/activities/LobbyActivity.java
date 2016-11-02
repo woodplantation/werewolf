@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.woodplantation.werwolf.R;
 import com.woodplantation.werwolf.graphics.MyTextView;
-import com.woodplantation.werwolf.network.Server2;
+import com.woodplantation.werwolf.network.Server;
 import com.woodplantation.werwolf.network.ServerOutcomeBroadcastReceiver;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class LobbyActivity extends AppCompatActivity {
         intentFilter.addAction(ServerOutcomeBroadcastReceiver.LOBBY_CREATE);
         intentFilter.addAction(ServerOutcomeBroadcastReceiver.PLAYER_LIST_CHANGED);
 
-        serviceIntent = new Intent(this, Server2.class);
+        serviceIntent = new Intent(this, Server.class);
         startService(serviceIntent);
     }
 
