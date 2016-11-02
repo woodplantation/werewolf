@@ -94,6 +94,7 @@
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:text="@string/join" />
 
+
         <include layout="@layout/activity_start_divider" />
 
         <com.woodplantation.werwolf.graphics.MyTextView

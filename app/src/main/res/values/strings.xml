@@ -13,6 +13,7 @@
     <string name="password">Passwort</string>
     <string name="limit_players">Spieler begrenzen</string>
     <string name="limit_players_to">auf</string>
+    <string name="title_activity_wiki">WikiActivity</string>
 
     <!-- - - - - - - - - - - - - - LobbyActivity - - - - - - - - - - - - - -->
     <string name="create_group_failed_title">Fehler</string>
@@ -21,5 +22,10 @@
     <string name="adress_x">Adresse: %1$s</string>
     <string name="password_x">Passwort: %1$s</string>
 
+    <!-- - - - - - - - - - - - - - WikiAcitvity - - - - - - - - - - - - - -->
+    <string name="roles">Die Rollen</string>
+    <string name="villager">Dorfbewohner</string>
+    <string name="show">Info</string>
+    <string name="werewolf">Werwolf</string>
 
 </resources>
