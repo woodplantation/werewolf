@@ -39,46 +39,132 @@
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@drawable/border"
+            android:id="@+id/wiki_villager"
+            android:onClick="showPopUp"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin">>
+
+            <ImageView
+                android:id="@+id/image_villager"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/bauer" />
 
             <com.woodplantation.werwolf.graphics.MyTextView
+                android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="30sp"
                 android:layout_weight="0.4"
                 android:text="@string/villager" />
 
-            <com.woodplantation.werwolf.graphics.MyButton
-                android:id="@+id/wiki_villager"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:onClick="showPopUp"
-                android:text="@string/show" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@drawable/border"
+            android:onClick="showPopUp"
+            android:id="@+id/wiki_werewolf"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin">>
+
+            <ImageView
+                android:id="@+id/image_werewolf"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/wolf" />
 
             <com.woodplantation.werwolf.graphics.MyTextView
+                android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
                 android:text="@string/werewolf" />
 
-            <com.woodplantation.werwolf.graphics.MyButton
-                android:id="@+id/wiki_werewolf"
-                android:layout_width="wrap_content"
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/border"
+            android:onClick="showPopUp"
+            android:id="@+id/wiki_witch"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin">>
+
+            <ImageView
+                android:id="@+id/image_witch"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/witch" />
+
+            <com.woodplantation.werwolf.graphics.MyTextView
+                android:layout_gravity="center"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:onClick="showPopUp"
-                android:text="@string/show" />
+                android:layout_weight="0.4"
+                android:text="@string/witch" />
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/border"
+            android:onClick="showPopUp"
+            android:id="@+id/wiki_hunter"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin">>
+
+            <ImageView
+                android:id="@+id/image_hunter"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/jaeger" />
+
+            <com.woodplantation.werwolf.graphics.MyTextView
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text="@string/hunter" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/border"
+            android:onClick="showPopUp"
+            android:id="@+id/wiki_oracle"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/image_oracle"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/eye" />
+
+            <com.woodplantation.werwolf.graphics.MyTextView
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text="@string/oracle" />
+
+        </LinearLayout>
+
+        <include layout="@layout/activity_start_divider" />
     </LinearLayout>
 
 </ScrollView>
