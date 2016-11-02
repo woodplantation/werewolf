@@ -24,4 +24,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_vertical_margin_small"/>
 
+    <ListView
+        android:id="@+id/list_view_players"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>
