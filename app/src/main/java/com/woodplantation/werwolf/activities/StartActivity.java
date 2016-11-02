@@ -25,16 +25,6 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void initGraphics() {
-        MySwitch mySwitch = (MySwitch) findViewById(R.id.switch_create_lobby_limit_players);
-        final LinearLayout limitPlayerLayout = (LinearLayout) findViewById(R.id.layout_create_lobby_limit_players);
-
-        mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                limitPlayerLayout.setVisibility(b ? View.VISIBLE : View.INVISIBLE);
-            }
-        });
-
         MyButton createButton = (MyButton) findViewById(R.id.button_create_lobby);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override

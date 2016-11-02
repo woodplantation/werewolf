@@ -57,7 +57,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
-                android:text="@string/name" />
+                android:text="@string/address" />
 
             <com.woodplantation.werwolf.graphics.MyEditText
                 android:id="@+id/edit_text_join_lobby_name"
@@ -97,98 +97,12 @@
 
         <include layout="@layout/activity_start_divider" />
 
-        <com.woodplantation.werwolf.graphics.MyTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="@string/create_lobby" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_vertical_margin_small"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <com.woodplantation.werwolf.graphics.MyTextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:text="@string/name" />
-
-            <com.woodplantation.werwolf.graphics.MyEditText
-                android:id="@+id/edit_text_create_lobby_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.6" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_vertical_margin_small"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <com.woodplantation.werwolf.graphics.MyTextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:text="@string/password" />
-
-            <com.woodplantation.werwolf.graphics.MyEditText
-                android:id="@+id/edit_text_create_lobby_password"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.6" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center|left"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:orientation="horizontal">
-
-            <com.woodplantation.werwolf.graphics.MySwitch
-                android:id="@+id/switch_create_lobby_limit_players"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:text="@string/limit_players" />
-
-            <LinearLayout
-                android:id="@+id/layout_create_lobby_limit_players"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="invisible">
-
-                <com.woodplantation.werwolf.graphics.MyTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/limit_players_to"/>
-
-                <com.woodplantation.werwolf.graphics.MyEditText
-                    android:id="@+id/edit_text_create_lobby_limit_players"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:digits="0123456789"
-                    android:ems="5"
-                    android:maxLength="2"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
         <com.woodplantation.werwolf.graphics.MyButton
             android:id="@+id/button_create_lobby"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/create" />
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/create_lobby" />
 
     </LinearLayout>
 </ScrollView>
