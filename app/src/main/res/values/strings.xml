@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Werwolf</string>
 
+    <string name="ok">OK</string>
+
     <!-- - - - - - - - - - - - - - StartActivity - - - - - - - - - - - - - -->
     <string name="display_name">Anzeigename</string>
     <string name="join_lobby">Lobby beitreten</string>
@@ -11,5 +13,13 @@
     <string name="password">Passwort</string>
     <string name="limit_players">Spieler begrenzen</string>
     <string name="limit_players_to">auf</string>
+
+    <!-- - - - - - - - - - - - - - LobbyActivity - - - - - - - - - - - - - -->
+    <string name="create_group_failed_title">Fehler</string>
+    <string name="create_group_failed_text">Es gab ein Problem beim Erstellen der Lobby. Bitte überprüfe Deine WLAN-Einstellungen und versuche es erneut.</string>
+    <string name="create_group_success">Die Lobby wurde erfolgreich erstellt.</string>
+    <string name="adress_x">Adresse: %1$s</string>
+    <string name="password_x">Passwort: %1$s</string>
+
 
 </resources>

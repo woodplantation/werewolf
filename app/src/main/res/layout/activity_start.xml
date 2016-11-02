@@ -4,7 +4,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.woodplantation.werwolf.StartActivity">
+    tools:context="com.woodplantation.werwolf.activities.StartActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -184,6 +184,7 @@
         </LinearLayout>
 
         <com.woodplantation.werwolf.graphics.MyButton
+            android:id="@+id/button_create_lobby"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/create" />
