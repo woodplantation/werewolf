@@ -19,4 +19,6 @@
     <string name="villager">Dorfbewohner</string>
     <string name="show">Info</string>
     <string name="werewolf">Werwolf</string>
+
+    <string name="villager_info">Der Dorfbewohner kann gar nichts.</string>
 </resources>

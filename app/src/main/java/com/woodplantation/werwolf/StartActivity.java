@@ -34,4 +34,10 @@ public class StartActivity extends AppCompatActivity {
         });
 
     }
+/*
+    public void showWiki(View view){
+        Intent intent = new Intent(this, WikiActivity.class);
+        startActivity(intent);
+
+    }*/
 }

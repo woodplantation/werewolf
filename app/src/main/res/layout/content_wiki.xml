@@ -28,10 +28,10 @@
             android:weightSum="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.4"
             android:textSize="@dimen/font_size"
 
-            android:text="@string/roles" />
+            android:text="@string/roles"
+            android:textStyle="normal|bold" />
 
         <include layout="@layout/activity_start_divider" />
 
@@ -44,14 +44,16 @@
             <com.woodplantation.werwolf.graphics.MyTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/font_size"
+                android:textSize="30sp"
                 android:layout_weight="0.4"
                 android:text="@string/villager" />
 
             <com.woodplantation.werwolf.graphics.MyButton
+                android:id="@+id/villager"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                android:onClick="showPopUp"
                 android:text="@string/show" />
 
         </LinearLayout>
@@ -68,9 +70,11 @@
                 android:text="@string/werewolf" />
 
             <com.woodplantation.werwolf.graphics.MyButton
+                android:id="@+id/werewolf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                android:onClick="showPopUp"
                 android:text="@string/show" />
 
         </LinearLayout>
