@@ -45,4 +45,9 @@
 
     <!-- - - - - - - - - - - - - - MenuFragment - - - - - - - - - - - - - -->
     <string name="wiki">Wiki</string>
+
+    <!-- - - - - - - - - - - - - - Network - - - - - - - - - - - - - -->
+    <string name="service_stopped_title">Netzwerkproblem</string>
+    <string name="service_stopped_text">Es gab Probleme mit der Verbindung. Fehlermeldung: \n%1$s</string>
+
 </resources>
