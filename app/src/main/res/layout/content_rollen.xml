@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="com.woodplantation.werwolf.activities.WikiActivity"
-    tools:showIn="@layout/activity_wiki">
+    tools:context="com.woodplantation.werwolf.Wiki.RollenActivity"
+    tools:showIn="@layout/activity_rollen">
 
     <LinearLayout
         android:id="@+id/base_layout_wiki"

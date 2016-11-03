@@ -10,8 +10,9 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.woodplantation.werwolf.R;
+import com.woodplantation.werwolf.Wiki.RegelnActivity;
+import com.woodplantation.werwolf.Wiki.RollenActivity;
 import com.woodplantation.werwolf.graphics.MyButton;
-import com.woodplantation.werwolf.graphics.MyTextView;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -42,14 +43,21 @@ public class StartActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.item_wiki:
-                Intent intent = new Intent(this, WikiActivity.class);
+            case R.id.wiki_rollen:
+                intent = new Intent(this, RollenActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.wiki_regeln:
+                intent = new Intent(this, RegelnActivity.class);
+                startActivity(intent);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return true;
     }
 
     private class LobbyStartButtonListener implements View.OnClickListener {
