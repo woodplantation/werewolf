@@ -6,14 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
+import com.woodplantation.werwolf.communication.outgoing.ServerOutcomeBroadcastSender;
 
 /**
  * Created by Sebu on 02.11.2016.
@@ -29,12 +33,15 @@ public class Server extends Service {
     private WifiP2pManager.Channel mChannel;
     private WifiP2pBroadcastReceiver receiver;
 
-    private ServerOutcomeCommunication serverOutcomeCommunication;
+    private ServerOutcomeBroadcastSender serverOutcomeBroadcastSender;
+
+    private boolean running = false;
+    private String mac;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        serverOutcomeCommunication = new ServerOutcomeCommunication();
+        serverOutcomeBroadcastSender = new ServerOutcomeBroadcastSender(this);
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
@@ -48,13 +55,14 @@ public class Server extends Service {
         receiver = new WifiP2pBroadcastReceiver();
         registerReceiver(receiver, mIntentFilter);
 
-        mManager.createGroup(mChannel, null);
+        mManager.createGroup(mChannel, new OnCreateGroupListener());
     }
 
     @Override
     public void onDestroy() {
         Log.d("Server","onDestroy");
         unregisterReceiver(receiver);
+        mManager.removeGroup(mChannel, null);
         mManager.cancelConnect(mChannel, null);
         super.onDestroy();
     }
@@ -69,6 +77,7 @@ public class Server extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
         if (action == null) {
+            serverOutcomeBroadcastSender.serviceStoppedShowDialogFinishActivity("Fehler beim Einlesen von Parametern.");
             return START_STICKY;
         }
         Log.d("Server","onHandleIntent. action: " + action);
@@ -81,15 +90,19 @@ public class Server extends Service {
         return START_STICKY;
     }
 
-    private class CreateGroupInfoListener implements WifiP2pManager.GroupInfoListener {
+    private class OnCreateGroupListener implements WifiP2pManager.ActionListener {
 
         @Override
-        public void onGroupInfoAvailable(WifiP2pGroup wifiP2pGroup) {
-            Log.d("ServerService","ongroupinfoavailable " + wifiP2pGroup);
-            serverOutcomeCommunication.createLobby(wifiP2pGroup);
+        public void onSuccess() {
+
+        }
+
+        @Override
+        public void onFailure(int i) {
+            serverOutcomeBroadcastSender.createLobby(null);
+            stopSelf();
         }
     }
-
 
     private class WifiP2pBroadcastReceiver extends BroadcastReceiver {
 
@@ -115,44 +128,38 @@ public class Server extends Service {
                 } else {
                     // Wi-Fi P2P is not enabled
                     Log.d("ServerService","on receive. wifi p2p is disabled");
-                    serverOutcomeCommunication.createLobby(null);
+                    serverOutcomeBroadcastSender.createLobby(null);
                 }
             } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
                 // Call WifiP2pManager.requestPeers() to get a list of current peers
+                if (mManager != null && running) {
+                    mManager.requestPeers(mChannel, peerListListener);
+                }
             } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
                 // Respond to new connection or disconnections
-                if (networkInfo != null && networkInfo.isConnected() && wifiP2pInfo != null && wifiP2pInfo.groupFormed && wifiP2pInfo.isGroupOwner) {
-                    mManager.requestGroupInfo(mChannel, new CreateGroupInfoListener());
+                if (networkInfo != null && networkInfo.isConnected() && wifiP2pInfo != null && wifiP2pInfo.groupFormed && wifiP2pInfo.isGroupOwner && !running) {
+                    if (mac == null) {
+                        serverOutcomeBroadcastSender.createLobby(null);
+                        stopSelf();
+                        return;
+                    }
+                    running = true;
+                    serverOutcomeBroadcastSender.createLobby(mac);
                 }
             } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-                // Respond to this device's wifi state changing
+                if (wifiP2pDevice != null && mac == null) {
+                    mac = wifiP2pDevice.deviceAddress;
+                }
             }
 
         }
     }
 
-    private class ServerOutcomeCommunication {
-
-        private LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(Server.this);
-
-        private void createLobby(WifiP2pGroup wifiP2pGroup) {
-            Log.d("ServerOutcome","create lobby. " + wifiP2pGroup);
-            Intent intent = new Intent(ServerOutcomeBroadcastReceiver.LOBBY_CREATE);
-            intent.setClass(Server.this, ServerOutcomeBroadcastReceiver.class);
-            if (wifiP2pGroup == null) {
-                intent.putExtra(ServerOutcomeBroadcastReceiver.EXTRA_LOBBY_CREATE_SUCESS, false);
-            } else {
-                intent.putExtra(ServerOutcomeBroadcastReceiver.EXTRA_LOBBY_CREATE_SUCESS, true);
-                intent.putExtra(ServerOutcomeBroadcastReceiver.EXTRA_LOBBY_CREATE_ADDRESS, wifiP2pGroup.getNetworkName());
-                intent.putExtra(ServerOutcomeBroadcastReceiver.EXTRA_LOBBY_CREATE_PASSWORD, wifiP2pGroup.getPassphrase());
-            }
-            Log.d("ServerOutcome","create lobby. intent " + intent);
-            Log.d("ServerOutcome","create lobby. package " + Server.this.getPackageName());
-            localBroadcastManager.sendBroadcast(intent);
+    private WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
+        @Override
+        public void onPeersAvailable(WifiP2pDeviceList peerList) {
+            //TODO eventuell wegmachen, falls nur alle verfügbaren angezeigt werden; oder speichern, falls alle in der gruppe angezegit werden
+            Log.d("Server","peer list listener. peerlist: " + peerList.getDeviceList());
         }
-
-        private void playerListChanged() {
-
-        }
-    }
+    };
 }

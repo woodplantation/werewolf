@@ -20,6 +20,8 @@
     <string name="create_group_success">Die Lobby wurde erfolgreich erstellt.</string>
     <string name="adress_x">Adresse: %1$s</string>
     <string name="password_x">Passwort: %1$s</string>
+    <string name="join_group_failed_title">Fehler</string>
+    <string name="join_group_failed_text">Es gab ein Problem beim Beitreten der Lobby.</string>
 
     <!-- - - - - - - - - - - - - - WikiAcitvity - - - - - - - - - - - - - -->
     <string name="roles">Die Rollen</string>

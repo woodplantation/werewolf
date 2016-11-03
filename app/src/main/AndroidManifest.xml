@@ -36,6 +36,8 @@
             android:screenOrientation="portrait"/>
         <service android:name=".network.Server"
             android:exported="false"/>
+        <service android:name=".network.Client"
+            android:exported="false"/>
         <activity
             android:name=".activities.WikiActivity"
             android:label="@string/title_activity_wiki"
