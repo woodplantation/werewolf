@@ -3,19 +3,15 @@ package com.woodplantation.werwolf.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.Switch;
 
 import com.woodplantation.werwolf.R;
+import com.woodplantation.werwolf.Wiki.RegelnActivity;
+import com.woodplantation.werwolf.Wiki.RollenActivity;
 import com.woodplantation.werwolf.graphics.MyButton;
-import com.woodplantation.werwolf.graphics.MySwitch;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -45,15 +41,22 @@ public class StartActivity extends AppCompatActivity {
         return true;
     }
 
-@Override
-public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle item selection
-    switch (item.getItemId()) {
-        case R.id.item_wiki:
-            Intent intent = new Intent(this, WikiActivity.class);
-            startActivity(intent);
-        default:
-            return super.onOptionsItemSelected(item);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.wiki_rollen:
+                intent = new Intent(this, RollenActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.wiki_regeln:
+                intent = new Intent(this, RegelnActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
-}
 }

@@ -3,20 +3,20 @@
     package="com.woodplantation.werwolf">
 
     <uses-permission
-        android:required="true"
-        android:name="android.permission.ACCESS_WIFI_STATE"/>
+        android:name="android.permission.ACCESS_WIFI_STATE"
+        android:required="true" />
     <uses-permission
-        android:required="true"
-        android:name="android.permission.CHANGE_WIFI_STATE"/>
+        android:name="android.permission.CHANGE_WIFI_STATE"
+        android:required="true" />
     <uses-permission
-        android:required="true"
-        android:name="android.permission.INTERNET"/>
+        android:name="android.permission.INTERNET"
+        android:required="true" />
     <uses-permission
-        android:required="true"
-        android:name="android.permission.CHANGE_NETWORK_STATE" />
+        android:name="android.permission.CHANGE_NETWORK_STATE"
+        android:required="true" />
     <uses-permission
-        android:required="true"
-        android:name="android.permission.ACCESS_NETWORK_STATE" />
+        android:name="android.permission.ACCESS_NETWORK_STATE"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -24,7 +24,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.StartActivity"
+        <activity
+            android:name=".activities.StartActivity"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,14 +33,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.LobbyActivity"
-            android:screenOrientation="portrait"/>
-        <service android:name=".network.Server"
-            android:exported="false"/>
         <activity
-            android:name=".activities.WikiActivity"
+            android:name=".activities.LobbyActivity"
+            android:screenOrientation="portrait" />
+
+        <service
+            android:name=".network.Server"
+            android:exported="false" />
+
+        <activity
+            android:name=".Wiki.RollenActivity"
             android:label="@string/title_activity_wiki"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Wiki.RegelnActivity"
+            android:label="@string/title_activity_regeln"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

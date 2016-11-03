@@ -43,11 +43,18 @@
         deren Rolle(gut oder böse) er erfahren möchte.
         Sofern kein Gärtner im Spiel ist, der dem Seher irrtümlicherweise als Werwolf angezeigt wird, ist diese Information immer korrekt.</string>
 
+    <string name="rules_concept">Werwolf ist ein Spiel, bei dem zwei Teams, Dorfbewohner und Werwölfe, gegeneinander spielen.
+        Die Werwölfe haben sich unerkannt in das Dorf eingeschleust und bringen des Nachts Dorfbewohner um.
+        Am Tag versucht die Dorfgemeinschaft den Übeltätern auf die Spur zu kommen. Gespielt wird in größeren Runden von min. 8 Spielern.
+        Die von uns entwickelte App übernimmt die Verteilung der Rollen und führt im weiteren Verlauf des Spiels als Spielleiter durch die einzelnen Phasen. </string>
+
     <!-- - - - - - - - - - - - - - MenuFragment - - - - - - - - - - - - - -->
-    <string name="wiki">Wiki</string>
+    <string name="rules">Regeln</string>
+    <string name="classes">Rollen</string>
 
     <!-- - - - - - - - - - - - - - Network - - - - - - - - - - - - - -->
     <string name="service_stopped_title">Netzwerkproblem</string>
     <string name="service_stopped_text">Es gab Probleme mit der Verbindung. Fehlermeldung: \n%1$s</string>
+    <string name="title_activity_regeln">RegelnActivity</string>
 
 </resources>
