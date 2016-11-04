@@ -40,6 +40,9 @@
         <service
             android:name=".network.Server"
             android:exported="false" />
+        <service
+            android:name=".network.Client"
+            android:exported="false" />
 
         <activity
             android:name=".Wiki.RollenActivity"
@@ -50,12 +53,9 @@
             android:label="@string/title_activity_regeln"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Settings.SettingsActivity"
-            android:label="@string/title_activity_settings" />
-        <activity
             android:name=".activities.GameSettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

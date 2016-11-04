@@ -20,6 +20,8 @@
     <string name="create_group_success">Die Lobby wurde erfolgreich erstellt.</string>
     <string name="adress_x">Adresse: %1$s</string>
     <string name="password_x">Passwort: %1$s</string>
+    <string name="join_group_failed_title">Fehler</string>
+    <string name="join_group_failed_text">Es gab ein Problem beim Beitreten der Lobby.</string>
 
     <!-- - - - - - - - - - - - - - WikiAcitvity - - - - - - - - - - - - - -->
     <string name="roles">Die Rollen</string>
@@ -51,6 +53,7 @@
     <!-- - - - - - - - - - - - - - MenuFragment - - - - - - - - - - - - - -->
     <string name="rules">Regeln</string>
     <string name="classes">Rollen</string>
+    <string name="settings">Einstellungen</string>
 
     <!-- - - - - - - - - - - - - - Network - - - - - - - - - - - - - -->
     <string name="service_stopped_title">Netzwerkproblem</string>
@@ -59,6 +62,8 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
-
+    <string name="settings_players">Anzahl Spieler:</string>
+    <string name="settings_werewolf">Werwölfe:</string>
+    <string name="settings_role_info">Alle Sonderrollen sind gleichzeitig Dorfbewohner.</string>
 
 </resources>

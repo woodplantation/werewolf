@@ -1,4 +1,4 @@
-package com.woodplantation.werwolf.network;
+package com.woodplantation.werwolf.communication.incoming;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -9,19 +9,24 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.woodplantation.werwolf.R;
+import com.woodplantation.werwolf.activities.LobbyActivity;
+
+import java.util.ArrayList;
 
 /**
- * Created by Sebu on 02.11.2016.
+ * Created by Sebu on 03.11.2016.
  */
 
-public class ClientOutcomeBroadcastReceiver extends BroadcastReceiver {
+public abstract class OutcomeBroadcastReceiver extends BroadcastReceiver {
 
+    public static final String PLAYER_LIST_CHANGED = "player_list_changed";
+    public static final String EXTRA_PLAYER_LIST_CHANGED = "extra_" + PLAYER_LIST_CHANGED;
     public static final String SERVICE_STOPPED_SHOW_DIALOG_FINISH_ACTIVITY = "service_stopped";
     public static final String EXTRA_SERVICE_STOPPED_SHOW_DIALOG_FINISH_ACTIVITY_ERROR = "extra_" + SERVICE_STOPPED_SHOW_DIALOG_FINISH_ACTIVITY + "_error";
 
-    private Activity activity;
+    protected Activity activity;
 
-    public ClientOutcomeBroadcastReceiver(Activity activity) {
+    public OutcomeBroadcastReceiver(Activity activity) {
         this.activity = activity;
     }
 
@@ -32,7 +37,16 @@ public class ClientOutcomeBroadcastReceiver extends BroadcastReceiver {
         if (action == null) {
             return;
         }
-        switch(action) {
+        switch (action) {
+            case PLAYER_LIST_CHANGED: {
+                if (activity instanceof LobbyActivity) {
+                    ArrayList<String> list = intent.getStringArrayListExtra(EXTRA_PLAYER_LIST_CHANGED);
+                    if (list != null) {
+                        ((LobbyActivity) activity).playerListChanged(list);
+                    }
+                }
+                break;
+            }
             case SERVICE_STOPPED_SHOW_DIALOG_FINISH_ACTIVITY: {
                 String error = intent.getStringExtra(EXTRA_SERVICE_STOPPED_SHOW_DIALOG_FINISH_ACTIVITY_ERROR);
                 if (error == null) {
@@ -53,6 +67,5 @@ public class ClientOutcomeBroadcastReceiver extends BroadcastReceiver {
                 break;
             }
         }
-
     }
 }

@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.woodplantation.werwolf.R;
 import com.woodplantation.werwolf.Wiki.RegelnActivity;
@@ -24,14 +25,13 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void initGraphics() {
+        LobbyStartButtonListener lobbyStartButtonListener = new LobbyStartButtonListener();
+
         MyButton createButton = (MyButton) findViewById(R.id.button_create_lobby);
-        createButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(StartActivity.this, LobbyActivity.class);
-                startActivity(intent);
-            }
-        });
+        createButton.setOnClickListener(lobbyStartButtonListener);
+
+        MyButton joinButton = (MyButton) findViewById(R.id.button_join_lobby);
+        joinButton.setOnClickListener(lobbyStartButtonListener);
     }
 
     @Override
@@ -54,9 +54,28 @@ public class StartActivity extends AppCompatActivity {
                 intent = new Intent(this, RegelnActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.menu_settings:
+                intent = new Intent(this, GameSettingsActivity.class);
+                startActivity(intent);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    private class LobbyStartButtonListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            boolean server = view.getId() == R.id.button_create_lobby;
+            Intent intent = new Intent(StartActivity.this, LobbyActivity.class);
+            intent.putExtra(LobbyActivity.EXTRA_IS_SERVER, server);
+            if (!server) {
+                String address = ((EditText) findViewById(R.id.edit_text_join_lobby_name)).getText().toString();
+                intent.putExtra(LobbyActivity.EXTRA_ADDRESS, address);
+            }
+            startActivity(intent);
+        }
     }
 }
