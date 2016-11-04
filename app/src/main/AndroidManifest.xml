@@ -33,12 +33,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.LobbyActivity"
-            android:screenOrientation="portrait"/>
-        <service android:name=".network.Server"
-            android:exported="false"/>
-        <service android:name=".network.Client"
-            android:exported="false"/>
+        <activity
+            android:name=".activities.LobbyActivity"
+            android:screenOrientation="portrait" />
+
+        <service
+            android:name=".network.Server"
+            android:exported="false" />
+        <service
+            android:name=".network.Client"
+            android:exported="false" />
+
         <activity
             android:name=".Wiki.RollenActivity"
             android:label="@string/title_activity_wiki"
@@ -46,7 +51,11 @@
         <activity
             android:name=".Wiki.RegelnActivity"
             android:label="@string/title_activity_regeln"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.GameSettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

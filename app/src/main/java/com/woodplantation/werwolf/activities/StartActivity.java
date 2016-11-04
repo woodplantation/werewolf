@@ -55,6 +55,10 @@ public class StartActivity extends AppCompatActivity {
                 intent = new Intent(this, RegelnActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.menu_settings:
+                intent = new Intent(this, GameSettingsActivity.class);
+                startActivity(intent);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -53,10 +53,17 @@
     <!-- - - - - - - - - - - - - - MenuFragment - - - - - - - - - - - - - -->
     <string name="rules">Regeln</string>
     <string name="classes">Rollen</string>
+    <string name="settings">Einstellungen</string>
 
     <!-- - - - - - - - - - - - - - Network - - - - - - - - - - - - - -->
     <string name="service_stopped_title">Netzwerkproblem</string>
     <string name="service_stopped_text">Es gab Probleme mit der Verbindung. Fehlermeldung: \n%1$s</string>
     <string name="title_activity_regeln">RegelnActivity</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+    <string name="settings_players">Anzahl Spieler:</string>
+    <string name="settings_werewolf">Werwölfe:</string>
+    <string name="settings_role_info">Alle Sonderrollen sind gleichzeitig Dorfbewohner.</string>
 
 </resources>
