@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.woodplantation.werwolf.communication.incoming.ServerOutcomeBroadcastReceiver;
+import com.woodplantation.werwolf.network.Server;
 
 /**
  * Created by Sebu on 03.11.2016.
@@ -14,8 +15,8 @@ import com.woodplantation.werwolf.communication.incoming.ServerOutcomeBroadcastR
 
 public class ServerOutcomeBroadcastSender extends OutcomeBroadcastSender {
 
-    public ServerOutcomeBroadcastSender(Service service) {
-        super(service);
+    public ServerOutcomeBroadcastSender(Server server) {
+        super(server);
     }
 
     @Override
@@ -27,7 +28,7 @@ public class ServerOutcomeBroadcastSender extends OutcomeBroadcastSender {
      *
      * @param address @Nullable
      */
-    public void createLobby(String address) {
+    public void createLobby(String address, int port) {
         Log.d("ServerOutcome","create lobby. " + address);
         Intent intent = new Intent(ServerOutcomeBroadcastReceiver.LOBBY_CREATE);
         intent.setClass(service, ServerOutcomeBroadcastReceiver.class);
@@ -36,6 +37,7 @@ public class ServerOutcomeBroadcastSender extends OutcomeBroadcastSender {
         } else {
             intent.putExtra(ServerOutcomeBroadcastReceiver.EXTRA_LOBBY_CREATE_SUCESS, true);
             intent.putExtra(ServerOutcomeBroadcastReceiver.EXTRA_LOBBY_CREATE_ADDRESS, address);
+            intent.putExtra(ServerOutcomeBroadcastReceiver.EXTRA_LOBBY_CREATE_PORT, port);
         }
         localBroadcastManager.sendBroadcast(intent);
     }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.woodplantation.werwolf.communication.incoming.ClientOutcomeBroadcastReceiver;
+import com.woodplantation.werwolf.network.Client;
 
 /**
  * Created by Sebu on 03.11.2016.
@@ -12,8 +13,8 @@ import com.woodplantation.werwolf.communication.incoming.ClientOutcomeBroadcastR
 
 public class ClientOutcomeBroadcastSender extends OutcomeBroadcastSender {
 
-    public ClientOutcomeBroadcastSender(Service service) {
-        super(service);
+    public ClientOutcomeBroadcastSender(Client client) {
+        super(client);
     }
 
     @Override

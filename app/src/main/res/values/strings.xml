@@ -9,19 +9,19 @@
     <string name="join">beitreten</string>
     <string name="create_lobby">Lobby erstellen</string>
     <string name="address">Adresse</string>
-    <string name="password">Passwort</string>
-    <string name="limit_players">Spieler begrenzen</string>
-    <string name="limit_players_to">auf</string>
+    <string name="port">Port</string>
     <string name="title_activity_wiki">WikiActivity</string>
+    <string name="no_display_name_entered_title">Keinen Anzeigenamen eingegeben</string>
+    <string name="no_display_name_entered_text">Bitte gib einen Anzeigenamen ein. Dies ist dein Name im Spiel.</string>
+    <string name="bad_data_entered_title">Keine Adresse eingegeben</string>
+    <string name="bad_data_entered_text">Bitte gib die Adresse und Port des Admins ein. Diese Daten werden auf dem Handy des Admins angezeigt.</string>
 
     <!-- - - - - - - - - - - - - - LobbyActivity - - - - - - - - - - - - - -->
     <string name="create_group_failed_title">Fehler</string>
     <string name="create_group_failed_text">Es gab ein Problem beim Erstellen der Lobby. Bitte überprüfe Deine WLAN-Einstellungen und versuche es erneut.</string>
     <string name="create_group_success">Die Lobby wurde erfolgreich erstellt.</string>
     <string name="adress_x">Adresse: %1$s</string>
-    <string name="password_x">Passwort: %1$s</string>
-    <string name="join_group_failed_title">Fehler</string>
-    <string name="join_group_failed_text">Es gab ein Problem beim Beitreten der Lobby.</string>
+    <string name="port_x">Port: %1$d</string>
 
     <!-- - - - - - - - - - - - - - WikiAcitvity - - - - - - - - - - - - - -->
     <string name="roles">Die Rollen</string>

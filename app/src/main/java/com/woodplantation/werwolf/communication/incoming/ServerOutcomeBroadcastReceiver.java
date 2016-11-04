@@ -16,6 +16,7 @@ public class ServerOutcomeBroadcastReceiver extends OutcomeBroadcastReceiver{
     public static final String LOBBY_CREATE = "lobby_create";
     public static final String EXTRA_LOBBY_CREATE_SUCESS = "extra_" + LOBBY_CREATE + "_sucess";
     public static final String EXTRA_LOBBY_CREATE_ADDRESS = "extra_" + LOBBY_CREATE + "_address";
+    public static final String EXTRA_LOBBY_CREATE_PORT = "extra_" + LOBBY_CREATE + "_port";
 
     public ServerOutcomeBroadcastReceiver(Activity activity) {
         super(activity);
@@ -33,7 +34,8 @@ public class ServerOutcomeBroadcastReceiver extends OutcomeBroadcastReceiver{
                 if (activity instanceof LobbyActivity) {
                     boolean success = intent.getBooleanExtra(EXTRA_LOBBY_CREATE_SUCESS, false);
                     String address = intent.getStringExtra(EXTRA_LOBBY_CREATE_ADDRESS);
-                    ((LobbyActivity) activity).lobbyCreate(success, address);
+                    int port = intent.getIntExtra(EXTRA_LOBBY_CREATE_PORT, -1);
+                    ((LobbyActivity) activity).lobbyCreate(success, address, port);
                 }
                 break;
             }

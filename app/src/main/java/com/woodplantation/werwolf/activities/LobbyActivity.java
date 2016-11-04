@@ -22,6 +22,7 @@ import com.woodplantation.werwolf.Wiki.RollenActivity;
 import com.woodplantation.werwolf.graphics.MyTextView;
 import com.woodplantation.werwolf.network.Client;
 import com.woodplantation.werwolf.communication.incoming.ClientOutcomeBroadcastReceiver;
+import com.woodplantation.werwolf.network.NetworkingService;
 import com.woodplantation.werwolf.network.Server;
 import com.woodplantation.werwolf.communication.incoming.ServerOutcomeBroadcastReceiver;
 
@@ -35,6 +36,8 @@ public class LobbyActivity extends AppCompatActivity {
 
     public static final String EXTRA_IS_SERVER = "is_server";
     public static final String EXTRA_ADDRESS = "address";
+    public static final String EXTRA_PORT = "port";
+    public static final String EXTRA_DISPLAYNAME = "displayname";
 
     private boolean server;
 
@@ -57,22 +60,31 @@ public class LobbyActivity extends AppCompatActivity {
 
         initGraphics();
 
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        intentFilter = new IntentFilter();
-        if (server) {
-            initServer();
-        } else {
-            initClient();
-        }
-        if (serviceIntent != null) {
-            Log.d("Lobby","startin intent.");
-            startService(serviceIntent);
-        }
+        initNetworkingService();
     }
 
     private void initGraphics() {
         listViewPlayers = (ListView) findViewById(R.id.list_view_players);
         listViewPlayers.setAdapter(new ArrayAdapter<String>(this, R.layout.textview, players));
+    }
+
+    private void initNetworkingService() {
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        intentFilter = new IntentFilter();
+        Intent intent = getIntent();
+        if (server) {
+            initServer();
+        } else {
+            initClient(intent);
+        }
+        if (serviceIntent != null) {
+            String displayName = intent.getStringExtra(EXTRA_DISPLAYNAME);
+            serviceIntent.putExtra(NetworkingService.EXTRA_INITIALIZE_DISPLAYNAME, displayName);
+            serviceIntent.setAction(NetworkingService.COMMAND_INITIALIZE);
+
+            Log.d("Lobby","startin intent.");
+            startService(serviceIntent);
+        }
     }
 
     private void initServer() {
@@ -84,32 +96,16 @@ public class LobbyActivity extends AppCompatActivity {
         serviceIntent = new Intent(this, Server.class);
     }
 
-    private void initClient() {
+    private void initClient(Intent intent) {
         Log.d("Lobby","init client.");
         outcomeBroadcastReceiver = new ClientOutcomeBroadcastReceiver(this);
         intentFilter.addAction(ClientOutcomeBroadcastReceiver.SERVICE_STOPPED_SHOW_DIALOG_FINISH_ACTIVITY);
 
-        Intent intent = getIntent();
         String address = intent.getStringExtra(LobbyActivity.EXTRA_ADDRESS);
-        if (address == null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.join_group_failed_title);
-            builder.setMessage(R.string.join_group_failed_text);
-            builder.setCancelable(false);
-            builder.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                    LobbyActivity.this.finish();
-                }
-            });
-            builder.show();
-            serviceIntent = null;
-            return;
-        }
+        int port = intent.getIntExtra(LobbyActivity.EXTRA_ADDRESS, -1);
         serviceIntent = new Intent(this, Client.class);
-        serviceIntent.setAction(Client.COMMAND_START);
-        serviceIntent.putExtra(Client.EXTRA_START_ADDRESS, address);
+        serviceIntent.putExtra(Client.EXTRA_INITIALIZE_ADDRESS, address);
+        serviceIntent.putExtra(Client.EXTRA_INITIALIZE_PORT, port);
     }
 
     @Override
@@ -157,11 +153,13 @@ public class LobbyActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void lobbyCreate(boolean success, String address) {
+    public void lobbyCreate(boolean success, String address, int port) {
         if (success) {
             Toast.makeText(this, R.string.create_group_success, Toast.LENGTH_LONG).show();
-            MyTextView ipTextView = (MyTextView) findViewById(R.id.text_view_group_address);
-            ipTextView.setText(getString(R.string.adress_x, address));
+            MyTextView addressTextView = (MyTextView) findViewById(R.id.text_view_group_address);
+            addressTextView.setText(getString(R.string.adress_x, address));
+            MyTextView portTextView = (MyTextView) findViewById(R.id.text_view_group_port);
+            portTextView.setText(getString(R.string.port_x, port));
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.create_group_failed_title);
