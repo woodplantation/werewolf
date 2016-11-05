@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.woodplantation.werwolf.communication.incoming.OutcomeBroadcastReceiver;
 
+import java.util.ArrayList;
+
 /**
  * Created by Sebu on 03.11.2016.
  */
@@ -21,7 +23,13 @@ public abstract class OutcomeBroadcastSender {
         this.service = service;
     }
 
-    public abstract void playerListChanged();
+    public void playerListChanged(ArrayList<String> list) {
+        Log.d("OutcomeBS","playerlist changed. list : " + list);
+        Intent intent = new Intent(OutcomeBroadcastReceiver.PLAYER_LIST_CHANGED);
+        intent.setClass(service, OutcomeBroadcastReceiver.class);
+        intent.putExtra(OutcomeBroadcastReceiver.EXTRA_PLAYER_LIST_CHANGED, list);
+        localBroadcastManager.sendBroadcast(intent);
+    }
 
     public void serviceStoppedShowDialogFinishActivity(String error) {
         Log.d("OutcomeBS","service stopped. " + error);

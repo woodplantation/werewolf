@@ -10,9 +10,13 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 
 /**
@@ -30,6 +34,9 @@ public class Client extends NetworkingService {
     private InetAddress groupOwnerAddress;
 
     private ArrayList<String> displayNames = new ArrayList<>();
+
+    private Socket socket;
+    private PrintWriter out;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -162,7 +169,28 @@ public class Client extends NetworkingService {
         public void onConnectionInfoAvailable(final WifiP2pInfo info) {
             // InetAddress from WifiP2pInfo struct.
             groupOwnerAddress = info.groupOwnerAddress;
+            initSocket();
             //TODO we got IP address here.
+        }
+    };
+
+    private void initSocket() {
+        try {
+            socket = new Socket(groupOwnerAddress, groupOwnerPort);
+            out = new PrintWriter(socket.getOutputStream());
+            sendDisplaynameTask.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            outcomeBroadcastSender.serviceStoppedShowDialogFinishActivity("Fehler beim Erstellen der Verbindung");
+            stopSelf();
+        }
+    }
+
+    private AsyncTask<Void,Void,Void> sendDisplaynameTask = new AsyncTask<Void, Void, Void>() {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            out.write(displayName);
+            return null;
         }
     };
 

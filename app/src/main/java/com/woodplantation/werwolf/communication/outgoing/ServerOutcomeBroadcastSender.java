@@ -19,11 +19,6 @@ public class ServerOutcomeBroadcastSender extends OutcomeBroadcastSender {
         super(server);
     }
 
-    @Override
-    public void playerListChanged() {
-
-    }
-
     /**
      *
      * @param address @Nullable

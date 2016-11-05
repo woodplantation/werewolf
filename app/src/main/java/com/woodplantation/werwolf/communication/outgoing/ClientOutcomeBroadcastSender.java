@@ -16,9 +16,4 @@ public class ClientOutcomeBroadcastSender extends OutcomeBroadcastSender {
     public ClientOutcomeBroadcastSender(Client client) {
         super(client);
     }
-
-    @Override
-    public void playerListChanged() {
-
-    }
 }

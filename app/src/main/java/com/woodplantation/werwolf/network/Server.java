@@ -13,7 +13,10 @@ import android.util.Log;
 
 import com.woodplantation.werwolf.communication.outgoing.ServerOutcomeBroadcastSender;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -24,6 +27,12 @@ import java.util.ArrayList;
 
 public class Server extends NetworkingService {
 
+    private class ClientInfo {
+        private Socket socket;
+        private BufferedReader in;
+        private String displayname;
+    }
+
     //Commands that can be sent as intents
     public static final String COMMAND_KICK_PLAYER = "kick_player";
     public static final String EXTRA_KICK_PLAYER_PLAYER = "kick_player_player";
@@ -32,9 +41,20 @@ public class Server extends NetworkingService {
     private String mac;
 
     private ServerSocket serverSocket;
-    private ArrayList<Socket> clientSockets;
+    private ArrayList<ClientInfo> clients = new ArrayList<>();
 
     private boolean started = false;
+
+    //List of all tasks, that this service executes. should all be cancelled when service stops
+    private ArrayList<AsyncTask> tasks = new ArrayList<>();
+
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task : tasks) {
+            task.cancel(true);
+        }
+        super.onDestroy();
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -137,31 +157,101 @@ public class Server extends NetworkingService {
             serverSocket = new ServerSocket(0);
             ((ServerOutcomeBroadcastSender) outcomeBroadcastSender).createLobby(mac, serverSocket.getLocalPort());
 
-            collectingClients.execute();
+            CollectingClientsTask collectingClientsTask = new CollectingClientsTask();
+            collectingClientsTask.execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private AsyncTask<Void,Void,Void> collectingClients = new AsyncTask<Void, Void, Void>() {
+    private class CollectingClientsTask extends AsyncTask<Void, Void, Socket> {
         @Override
-        protected Void doInBackground(Void... voids) {
-
+        protected Socket doInBackground(Void... voids) {
+            tasks.add(this);
             try {
-                while(!started) {
-                    Socket client = serverSocket.accept();
-                    if (!started) {
-                        client.close();
-                        return null;
-                    }
-                    clientSockets.add(client);
-                    //TODO start task which waits for displayname of client
+                return serverSocket.accept();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Socket result) {
+            tasks.remove(this);
+            if (result == null) {
+                return;
+            }
+
+            //if we started already we dont want new clients
+            if (started) {
+                try {
+                    result.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                return;
+            }
+
+            //start new task for collecting clients
+            CollectingClientsTask collectingClientsTask = new CollectingClientsTask();
+            collectingClientsTask.execute();
+
+            //get Input
+            InputStream inputStream;
+            try {
+                inputStream = result.getInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            //save client and Input in list
+            BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+            ClientInfo clientInfo = new ClientInfo();
+            clientInfo.socket = result;
+            clientInfo.in = in;
+            clients.add(clientInfo);
+
+            //start task for getting displayname from client
+            GetDisplaynameTask getDisplaynameTask = new GetDisplaynameTask();
+            getDisplaynameTask.execute(clients.indexOf(clientInfo));
+        }
+    };
+
+    private class GetDisplaynameTask extends AsyncTask<Integer,Void,Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Integer... params) {
+            tasks.add(this);
+            try {
+                clients.get(params[0]).displayname = clients.get(params[0]).in.readLine();
+                return true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            return null;
+            return false;
         }
-    };
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (!result) {
+                return;
+            }
+            //TODO send notification to all clients that player list changed.
+
+            //send communication to activity that we got new playerlist.
+            playerListChanged();
+        }
+    }
+
+    private void playerListChanged() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add(displayName);
+        for (ClientInfo client : clients) {
+            if (client.displayname != null) {
+                list.add(client.displayname);
+            }
+        }
+        outcomeBroadcastSender.playerListChanged(list);
+    }
 }
