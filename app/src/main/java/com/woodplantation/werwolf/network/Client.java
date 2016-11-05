@@ -13,7 +13,9 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -37,6 +39,7 @@ public class Client extends NetworkingService {
 
     private Socket socket;
     private PrintWriter out;
+    private BufferedReader in;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -141,6 +144,7 @@ public class Client extends NetworkingService {
             }
             if (!flag) {
                 outcomeBroadcastSender.serviceStoppedShowDialogFinishActivity("Keine Lobby gefunden.");
+                stopSelf();
                 return;
             }
 
@@ -176,8 +180,16 @@ public class Client extends NetworkingService {
 
     private void initSocket() {
         try {
+            //initalizing stuff
             socket = new Socket(groupOwnerAddress, groupOwnerPort);
             out = new PrintWriter(socket.getOutputStream());
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            //start reading
+            ReadingIncomingCommandsTask readingIncomingCommandsTask = new ReadingIncomingCommandsTask();
+            readingIncomingCommandsTask.execute();
+
+            //send displayname
             sendDisplaynameTask.execute();
         } catch (IOException e) {
             e.printStackTrace();
@@ -189,9 +201,56 @@ public class Client extends NetworkingService {
     private AsyncTask<Void,Void,Void> sendDisplaynameTask = new AsyncTask<Void, Void, Void>() {
         @Override
         protected Void doInBackground(Void... voids) {
-            out.write(displayName);
+            NetworkCommand command = new NetworkCommand();
+            command.type = NetworkCommandType.CLIENT_SERVER_DISPLAYNAME;
+            command.string = displayName;
+            out.write(command.toJsonString());
             return null;
         }
     };
+
+    //TODO maybe put a class like this into superclass NetworkingService because the same thing needs to be done for Server
+    private class ReadingIncomingCommandsTask extends AsyncTask<Void,Void,String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            tasks.add(this);
+            try {
+                return in.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String networkCommand) {
+            tasks.remove(this);
+            if (networkCommand == null) {
+                outcomeBroadcastSender.serviceStoppedShowDialogFinishActivity("Fehler beim Einlesen");
+                stopSelf();
+                return;
+            }
+
+            //if we finished already we dont want to handle stuff anymore
+            if (finish) {
+                outcomeBroadcastSender.serviceStoppedShowDialogFinishActivity("Fehler beim Einlesen: bereits beendet");
+                stopSelf();
+                return;
+            }
+
+            //start new Incoming Command
+            ReadingIncomingCommandsTask task = new ReadingIncomingCommandsTask();
+            task.execute();
+
+            //handle this command
+            NetworkCommand command = new NetworkCommand(networkCommand);
+
+            switch (command.type) {
+                //TODO handle command
+            }
+
+        }
+    }
 
 }

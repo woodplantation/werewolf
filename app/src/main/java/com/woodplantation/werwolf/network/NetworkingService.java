@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -13,6 +14,12 @@ import android.util.Log;
 import com.woodplantation.werwolf.communication.outgoing.ClientOutcomeBroadcastSender;
 import com.woodplantation.werwolf.communication.outgoing.OutcomeBroadcastSender;
 import com.woodplantation.werwolf.communication.outgoing.ServerOutcomeBroadcastSender;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 
 
 /**
@@ -25,6 +32,41 @@ public abstract class NetworkingService extends Service {
     public static final String COMMAND_INITIALIZE = "initialize";
     public static final String EXTRA_INITIALIZE_DISPLAYNAME = "extra_" + COMMAND_INITIALIZE + "_displayname";
 
+    //Object for commands sent via network, from server to client or client to server.
+    enum NetworkCommandType {
+        CLIENT_SERVER_DISPLAYNAME, SERVER_CLIENT_SHUTDOWN
+    }
+    class NetworkCommand implements Serializable {
+        static final long serialVersionUID = -3469314080315513889L;
+        NetworkCommandType type;
+        String string;
+
+        NetworkCommand() {
+        }
+
+        NetworkCommand(String json) {
+            try {
+                JSONObject object = new JSONObject(json);
+                type = (NetworkCommandType) object.get("type");
+                string = object.getString("string");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        String toJsonString() {
+            try {
+                JSONObject object = new JSONObject();
+                object.put("type", type);
+                object.put("string", string);
+                return object.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
     protected WifiP2pManager mManager;
     protected WifiP2pManager.Channel mChannel;
     protected BroadcastReceiver receiver;
@@ -32,11 +74,15 @@ public abstract class NetworkingService extends Service {
     protected boolean running = false;
     protected boolean firstRun = true;
     protected boolean connected = false;
+    protected boolean finish = false;
     protected String action;
 
     protected OutcomeBroadcastSender outcomeBroadcastSender;
 
     protected String displayName;
+
+    //List of all tasks, that this service executes. should all be cancelled when service stops
+    protected ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Nullable
     @Override
@@ -47,6 +93,9 @@ public abstract class NetworkingService extends Service {
     @Override
     public void onDestroy() {
         Log.v("Networking","onDestroy");
+        for (AsyncTask task : tasks) {
+            task.cancel(true);
+        }
         unregisterReceiver(receiver);
         mManager.cancelConnect(mChannel, null);
         mManager.removeGroup(mChannel, null);

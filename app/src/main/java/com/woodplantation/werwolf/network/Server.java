@@ -45,17 +45,6 @@ public class Server extends NetworkingService {
 
     private boolean started = false;
 
-    //List of all tasks, that this service executes. should all be cancelled when service stops
-    private ArrayList<AsyncTask> tasks = new ArrayList<>();
-
-    @Override
-    public void onDestroy() {
-        for (AsyncTask task : tasks) {
-            task.cancel(true);
-        }
-        super.onDestroy();
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int superReturn = super.onStartCommand(intent, flags, startId, true);
