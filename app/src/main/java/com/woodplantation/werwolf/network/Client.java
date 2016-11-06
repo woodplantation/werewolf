@@ -12,14 +12,21 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
+import java.io.StreamTokenizer;
+import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Sebu on 02.11.2016.
@@ -115,6 +122,7 @@ public class Client extends NetworkingService {
                 if (mManager == null) {
                     return;
                 }
+                Log.d("Client","on receive. connection changed action, connected: " + connected);
                 if (networkInfo.isConnected() && !connected) {
                     connected = true;
                     // We are connected with the other device, request connection
@@ -171,40 +179,63 @@ public class Client extends NetworkingService {
 
         @Override
         public void onConnectionInfoAvailable(final WifiP2pInfo info) {
+            Log.d("Client","connection info listener on connection info available");
             // InetAddress from WifiP2pInfo struct.
             groupOwnerAddress = info.groupOwnerAddress;
-            initSocket();
-            //TODO we got IP address here.
+            initSocketTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     };
 
-    private void initSocket() {
-        try {
-            //initalizing stuff
-            socket = new Socket(groupOwnerAddress, groupOwnerPort);
-            out = new PrintWriter(socket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    private AsyncTask<Void,Void,Boolean> initSocketTask = new AsyncTask<Void, Void, Boolean>() {
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            try {
+                //initalizing stuff
+                socket = new Socket(groupOwnerAddress, groupOwnerPort);
+                out = new PrintWriter(socket.getOutputStream(),true);
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            //start reading
-            ReadingIncomingCommandsTask readingIncomingCommandsTask = new ReadingIncomingCommandsTask();
-            readingIncomingCommandsTask.execute();
-
-            //send displayname
-            sendDisplaynameTask.execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-            outcomeBroadcastSender.serviceStoppedShowDialogFinishActivity("Fehler beim Erstellen der Verbindung");
-            stopSelf();
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
         }
-    }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            Log.d("Client","initializing socket. on post execute. restul: " + result);
+            if (!result) {
+                outcomeBroadcastSender.serviceStoppedShowDialogFinishActivity("Fehler beim Erstellen der Verbindung");
+                stopSelf();
+            } else {
+                //start reading
+                ReadingIncomingCommandsTask readingIncomingCommandsTask = new ReadingIncomingCommandsTask();
+                readingIncomingCommandsTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
+
+                //send displayname
+                try {
+                    //TODO build in that server send command for client to send displayname
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                sendDisplaynameTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
+            }
+        }
+    };
 
     private AsyncTask<Void,Void,Void> sendDisplaynameTask = new AsyncTask<Void, Void, Void>() {
         @Override
         protected Void doInBackground(Void... voids) {
+            tasks.add(this);
+            Log.d("Client","send displayname task");
             NetworkCommand command = new NetworkCommand();
             command.type = NetworkCommandType.CLIENT_SERVER_DISPLAYNAME;
             command.string = displayName;
-            out.write(command.toJsonString());
+            out.println(command.toJsonString());
+            Log.d("Client","writing: " + command.toJsonString());
+            tasks.remove(this);
             return null;
         }
     };
@@ -214,6 +245,7 @@ public class Client extends NetworkingService {
 
         @Override
         protected String doInBackground(Void... voids) {
+            Log.d("Client","Reading incoming commands.");
             tasks.add(this);
             try {
                 return in.readLine();
@@ -225,12 +257,8 @@ public class Client extends NetworkingService {
 
         @Override
         protected void onPostExecute(String networkCommand) {
+            Log.d("Client","reading incoming command string: " + networkCommand);
             tasks.remove(this);
-            if (networkCommand == null) {
-                outcomeBroadcastSender.serviceStoppedShowDialogFinishActivity("Fehler beim Einlesen");
-                stopSelf();
-                return;
-            }
 
             //if we finished already we dont want to handle stuff anymore
             if (finish) {
@@ -241,13 +269,44 @@ public class Client extends NetworkingService {
 
             //start new Incoming Command
             ReadingIncomingCommandsTask task = new ReadingIncomingCommandsTask();
-            task.execute();
+            task.executeOnExecutor(THREAD_POOL_EXECUTOR);
+
+            if (networkCommand == null || networkCommand.equals("")) {
+                return;
+            }
 
             //handle this command
             NetworkCommand command = new NetworkCommand(networkCommand);
 
             switch (command.type) {
-                //TODO handle command
+                case SERVER_CLIENT_DISPLAYNAMES: {
+
+                    displayNames = (ArrayList) Arrays.asList(command.string);
+                    outcomeBroadcastSender.playerListChanged(displayNames);
+                    /*
+                    try {
+                        byte bytes[] = command.string.getBytes();
+                        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+                        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+
+
+                        displayNames = (ArrayList<String>) objectInputStream.readObject();
+                        outcomeBroadcastSender.playerListChanged(displayNames);
+
+                        objectInputStream.close();
+                        byteArrayInputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }*/
+                    break;
+                }
+                case SERVER_CLIENT_SHUTDOWN: {
+                    outcomeBroadcastSender.serviceStoppedShowDialogFinishActivity("Spiel wurde beendet.");
+                    stopSelf();
+                    break;
+                }
             }
 
         }

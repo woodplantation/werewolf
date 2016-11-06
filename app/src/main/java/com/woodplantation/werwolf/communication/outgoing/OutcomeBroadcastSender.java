@@ -27,7 +27,7 @@ public abstract class OutcomeBroadcastSender {
         Log.d("OutcomeBS","playerlist changed. list : " + list);
         Intent intent = new Intent(OutcomeBroadcastReceiver.PLAYER_LIST_CHANGED);
         intent.setClass(service, OutcomeBroadcastReceiver.class);
-        intent.putExtra(OutcomeBroadcastReceiver.EXTRA_PLAYER_LIST_CHANGED, list);
+        intent.putStringArrayListExtra(OutcomeBroadcastReceiver.EXTRA_PLAYER_LIST_CHANGED, list);
         localBroadcastManager.sendBroadcast(intent);
     }
 

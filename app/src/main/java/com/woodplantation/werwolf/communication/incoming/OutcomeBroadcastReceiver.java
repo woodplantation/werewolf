@@ -33,14 +33,16 @@ public abstract class OutcomeBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final String action = intent.getAction();
-        Log.d("ClientOutcomeBR","on receive. action: " + action);
+        Log.d("OutcomeBR","on receive. action: " + action);
         if (action == null) {
             return;
         }
         switch (action) {
             case PLAYER_LIST_CHANGED: {
+                Log.d("OutcomeBR","playerlist changed.");
                 if (activity instanceof LobbyActivity) {
                     ArrayList<String> list = intent.getStringArrayListExtra(EXTRA_PLAYER_LIST_CHANGED);
+                    Log.d("OutcomeBR","playerlist correct activity. list : " + list);
                     if (list != null) {
                         ((LobbyActivity) activity).playerListChanged(list);
                     }

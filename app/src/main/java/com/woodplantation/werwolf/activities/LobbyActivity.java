@@ -115,7 +115,8 @@ public class LobbyActivity extends AppCompatActivity {
         intentFilter.addAction(ClientOutcomeBroadcastReceiver.SERVICE_STOPPED_SHOW_DIALOG_FINISH_ACTIVITY);
 
         String address = intent.getStringExtra(LobbyActivity.EXTRA_ADDRESS);
-        int port = intent.getIntExtra(LobbyActivity.EXTRA_ADDRESS, -1);
+        int port = intent.getIntExtra(LobbyActivity.EXTRA_PORT, -1);
+        Log.d("Startactivity","add: " + address + " port: " + port);
         serviceIntent = new Intent(this, Client.class);
         serviceIntent.putExtra(Client.EXTRA_INITIALIZE_ADDRESS, address);
         serviceIntent.putExtra(Client.EXTRA_INITIALIZE_PORT, port);
@@ -191,6 +192,9 @@ public class LobbyActivity extends AppCompatActivity {
 
     public void playerListChanged(ArrayList<String> list) {
         players = list;
+        //TODO verbessern
+        ((ArrayAdapter<String>) listViewPlayers.getAdapter()).clear();
+        ((ArrayAdapter<String>) listViewPlayers.getAdapter()).addAll(list);
         ((ArrayAdapter<String>) listViewPlayers.getAdapter()).notifyDataSetChanged();
     }
 

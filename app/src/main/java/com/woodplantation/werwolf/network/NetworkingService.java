@@ -34,7 +34,7 @@ public abstract class NetworkingService extends Service {
 
     //Object for commands sent via network, from server to client or client to server.
     enum NetworkCommandType {
-        CLIENT_SERVER_DISPLAYNAME, SERVER_CLIENT_SHUTDOWN
+        CLIENT_SERVER_DISPLAYNAME, SERVER_CLIENT_SHUTDOWN, SERVER_CLIENT_DISPLAYNAMES
     }
     class NetworkCommand implements Serializable {
         static final long serialVersionUID = -3469314080315513889L;
@@ -47,7 +47,7 @@ public abstract class NetworkingService extends Service {
         NetworkCommand(String json) {
             try {
                 JSONObject object = new JSONObject(json);
-                type = (NetworkCommandType) object.get("type");
+                type = NetworkCommandType.valueOf(object.getString("type"));
                 string = object.getString("string");
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -59,7 +59,7 @@ public abstract class NetworkingService extends Service {
                 JSONObject object = new JSONObject();
                 object.put("type", type);
                 object.put("string", string);
-                return object.toString();
+                return object.toString() + "\n";
             } catch (JSONException e) {
                 e.printStackTrace();
                 return null;
@@ -128,6 +128,7 @@ public abstract class NetworkingService extends Service {
             firstRun = false;
         }
 
+        //TODO intent may be null if restarted by android OS, catch
         action = intent.getAction();
         Log.v("Client", "onstartcommand. action" + action);
         if (action == null) {

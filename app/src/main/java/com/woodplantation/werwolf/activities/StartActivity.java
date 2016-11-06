@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -97,6 +98,7 @@ public class StartActivity extends AppCompatActivity {
                 }
                 intent.putExtra(LobbyActivity.EXTRA_ADDRESS, address);
                 intent.putExtra(LobbyActivity.EXTRA_PORT, Integer.parseInt(port));
+                Log.d("Startactivity","add: " + address + " port: " + port);
             }
 
             startActivity(intent);

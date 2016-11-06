@@ -13,35 +13,30 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.woodplantation.werwolf.activities.LobbyActivity">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <com.woodplantation.werwolf.graphics.MyTextView
+            android:id="@+id/text_view_group_address"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginBottom="@dimen/activity_vertical_margin_small"/>
 
-            <com.woodplantation.werwolf.graphics.MyTextView
-                android:id="@+id/text_view_group_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin_small"/>
+        <com.woodplantation.werwolf.graphics.MyTextView
+            android:id="@+id/text_view_group_port"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_small"/>
 
-            <com.woodplantation.werwolf.graphics.MyTextView
-                android:id="@+id/text_view_group_port"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin_small"/>
+        <ListView
+            android:id="@+id/list_view_players"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-            <ListView
-                android:id="@+id/list_view_players"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+    </LinearLayout>
 
-        </LinearLayout>
-
-    </ScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

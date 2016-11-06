@@ -17,9 +17,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Sebu on 02.11.2016.
@@ -30,6 +33,7 @@ public class Server extends NetworkingService {
     private class ClientInfo {
         private Socket socket;
         private BufferedReader in;
+        private PrintWriter out;
         private String displayname;
     }
 
@@ -147,7 +151,7 @@ public class Server extends NetworkingService {
             ((ServerOutcomeBroadcastSender) outcomeBroadcastSender).createLobby(mac, serverSocket.getLocalPort());
 
             CollectingClientsTask collectingClientsTask = new CollectingClientsTask();
-            collectingClientsTask.execute();
+            collectingClientsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -156,6 +160,7 @@ public class Server extends NetworkingService {
     private class CollectingClientsTask extends AsyncTask<Void, Void, Socket> {
         @Override
         protected Socket doInBackground(Void... voids) {
+            Log.d("Server","collecting clients task");
             tasks.add(this);
             try {
                 return serverSocket.accept();
@@ -167,6 +172,7 @@ public class Server extends NetworkingService {
 
         @Override
         protected void onPostExecute(Socket result) {
+            Log.d("Server","collecting clients task on postexecute");
             tasks.remove(this);
             if (result == null) {
                 return;
@@ -184,26 +190,30 @@ public class Server extends NetworkingService {
 
             //start new task for collecting clients
             CollectingClientsTask collectingClientsTask = new CollectingClientsTask();
-            collectingClientsTask.execute();
+            collectingClientsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             //get Input
             InputStream inputStream;
+            OutputStream outputStream;
             try {
                 inputStream = result.getInputStream();
+                outputStream = result.getOutputStream();
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
             }
-            //save client and Input in list
+            //save client, input and output in list
             BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+            PrintWriter out = new PrintWriter(outputStream, true);
             ClientInfo clientInfo = new ClientInfo();
             clientInfo.socket = result;
             clientInfo.in = in;
+            clientInfo.out = out;
             clients.add(clientInfo);
 
             //start task for getting displayname from client
             GetDisplaynameTask getDisplaynameTask = new GetDisplaynameTask();
-            getDisplaynameTask.execute(clients.indexOf(clientInfo));
+            getDisplaynameTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, clients.indexOf(clientInfo));
         }
     };
 
@@ -211,9 +221,13 @@ public class Server extends NetworkingService {
 
         @Override
         protected Boolean doInBackground(Integer... params) {
+            Log.d("Server","get Displayname Task, index: " + params[0] + " clientinfo: " + clients.get(params[0]).in);
             tasks.add(this);
             try {
-                clients.get(params[0]).displayname = clients.get(params[0]).in.readLine();
+                String line = clients.get(params[0]).in.readLine();
+                Log.d("Server","get displayname task read: " + line);
+                NetworkCommand command = new NetworkCommand(line);
+                clients.get(params[0]).displayname = command.string;
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -223,6 +237,8 @@ public class Server extends NetworkingService {
 
         @Override
         protected void onPostExecute(Boolean result) {
+            tasks.remove(this);
+            Log.d("Server","get Displayname Task on postexecute. result: " + result);
             if (!result) {
                 return;
             }
@@ -242,5 +258,26 @@ public class Server extends NetworkingService {
             }
         }
         outcomeBroadcastSender.playerListChanged(list);
+        SendPlayerListTask task = new SendPlayerListTask();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, list);
+    }
+
+    private class SendPlayerListTask extends AsyncTask<ArrayList<String>,Void,Void> {
+
+        @Override
+        protected Void doInBackground(ArrayList<String>... params) {
+            tasks.add(this);
+
+            NetworkCommand command = new NetworkCommand();
+            command.type = NetworkCommandType.SERVER_CLIENT_DISPLAYNAMES;
+            command.string = params[0].toString();
+            for (ClientInfo client : clients) {
+                Log.d("Server","sending : " + command.toJsonString());
+                client.out.println(command.toJsonString());
+            }
+
+            tasks.remove(this);
+            return null;
+        }
     }
 }
