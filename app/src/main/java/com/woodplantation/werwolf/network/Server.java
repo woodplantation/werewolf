@@ -242,9 +242,7 @@ public class Server extends NetworkingService {
             if (!result) {
                 return;
             }
-            //TODO send notification to all clients that player list changed.
 
-            //send communication to activity that we got new playerlist.
             playerListChanged();
         }
     }
@@ -267,6 +265,7 @@ public class Server extends NetworkingService {
         @Override
         protected Void doInBackground(ArrayList<String>... params) {
             tasks.add(this);
+            Log.d("Server","sendplayerlisttask.");
 
             NetworkCommand command = new NetworkCommand();
             command.type = NetworkCommandType.SERVER_CLIENT_DISPLAYNAMES;

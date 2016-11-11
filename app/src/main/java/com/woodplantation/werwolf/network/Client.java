@@ -27,6 +27,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Sebu on 02.11.2016.
@@ -280,26 +281,14 @@ public class Client extends NetworkingService {
 
             switch (command.type) {
                 case SERVER_CLIENT_DISPLAYNAMES: {
-
-                    displayNames = (ArrayList) Arrays.asList(command.string);
+                    if (command.string.startsWith("[")) {
+                        command.string = command.string.substring(1);
+                    }
+                    if (command.string.endsWith("]")) {
+                        command.string = command.string.substring(0, command.string.length()-1);
+                    }
+                    displayNames = new ArrayList<String>(Arrays.asList(command.string.split("\\s*,\\s*")));
                     outcomeBroadcastSender.playerListChanged(displayNames);
-                    /*
-                    try {
-                        byte bytes[] = command.string.getBytes();
-                        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-                        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-
-
-                        displayNames = (ArrayList<String>) objectInputStream.readObject();
-                        outcomeBroadcastSender.playerListChanged(displayNames);
-
-                        objectInputStream.close();
-                        byteArrayInputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }*/
                     break;
                 }
                 case SERVER_CLIENT_SHUTDOWN: {

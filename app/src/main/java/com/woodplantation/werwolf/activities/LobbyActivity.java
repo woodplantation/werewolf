@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.woodplantation.werwolf.R;
 import com.woodplantation.werwolf.Wiki.RegelnActivity;
 import com.woodplantation.werwolf.Wiki.RollenActivity;
+import com.woodplantation.werwolf.communication.incoming.OutcomeBroadcastReceiver;
 import com.woodplantation.werwolf.graphics.MyTextView;
 import com.woodplantation.werwolf.network.Client;
 import com.woodplantation.werwolf.communication.incoming.ClientOutcomeBroadcastReceiver;
@@ -84,6 +85,8 @@ public class LobbyActivity extends AppCompatActivity {
     private void initNetworkingService() {
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         intentFilter = new IntentFilter();
+        intentFilter.addAction(OutcomeBroadcastReceiver.PLAYER_LIST_CHANGED);
+        intentFilter.addAction(OutcomeBroadcastReceiver.SERVICE_STOPPED_SHOW_DIALOG_FINISH_ACTIVITY);
         Intent intent = getIntent();
         if (server) {
             initServer();
@@ -104,7 +107,6 @@ public class LobbyActivity extends AppCompatActivity {
         Log.d("Lobby","init server.");
         outcomeBroadcastReceiver = new ServerOutcomeBroadcastReceiver(this);
         intentFilter.addAction(ServerOutcomeBroadcastReceiver.LOBBY_CREATE);
-        intentFilter.addAction(ServerOutcomeBroadcastReceiver.PLAYER_LIST_CHANGED);
 
         serviceIntent = new Intent(this, Server.class);
     }
@@ -112,7 +114,6 @@ public class LobbyActivity extends AppCompatActivity {
     private void initClient(Intent intent) {
         Log.d("Lobby","init client.");
         outcomeBroadcastReceiver = new ClientOutcomeBroadcastReceiver(this);
-        intentFilter.addAction(ClientOutcomeBroadcastReceiver.SERVICE_STOPPED_SHOW_DIALOG_FINISH_ACTIVITY);
 
         String address = intent.getStringExtra(LobbyActivity.EXTRA_ADDRESS);
         int port = intent.getIntExtra(LobbyActivity.EXTRA_PORT, -1);
@@ -192,7 +193,6 @@ public class LobbyActivity extends AppCompatActivity {
 
     public void playerListChanged(ArrayList<String> list) {
         players = list;
-        //TODO verbessern
         ((ArrayAdapter<String>) listViewPlayers.getAdapter()).clear();
         ((ArrayAdapter<String>) listViewPlayers.getAdapter()).addAll(list);
         ((ArrayAdapter<String>) listViewPlayers.getAdapter()).notifyDataSetChanged();

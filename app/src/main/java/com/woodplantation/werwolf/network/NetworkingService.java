@@ -128,9 +128,12 @@ public abstract class NetworkingService extends Service {
             firstRun = false;
         }
 
-        //TODO intent may be null if restarted by android OS, catch
+        if (intent == null) {
+            Log.d("NetworkingService","onstartcommand intent is null. flags: " + flags);
+            return START_STICKY;
+        }
         action = intent.getAction();
-        Log.v("Client", "onstartcommand. action" + action);
+        Log.v("NetworkingService", "onstartcommand. action" + action);
         if (action == null) {
             outcomeBroadcastSender.serviceStoppedShowDialogFinishActivity("Fehler bei der Übertragung.");
             stopSelf();
