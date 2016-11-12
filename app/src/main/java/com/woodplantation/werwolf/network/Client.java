@@ -263,8 +263,6 @@ public class Client extends NetworkingService {
 
             //if we finished already we dont want to handle stuff anymore
             if (finish) {
-                outcomeBroadcastSender.serviceStoppedShowDialogFinishActivity("Fehler beim Einlesen: bereits beendet");
-                stopSelf();
                 return;
             }
 

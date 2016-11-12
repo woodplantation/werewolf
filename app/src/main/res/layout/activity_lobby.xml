@@ -18,17 +18,48 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.woodplantation.werwolf.graphics.MyTextView
-            android:id="@+id/text_view_group_address"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_vertical_margin_small"/>
+            android:orientation="horizontal"
+            android:weightSum="1">
 
-        <com.woodplantation.werwolf.graphics.MyTextView
-            android:id="@+id/text_view_group_port"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_vertical_margin_small"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="0.5">
+
+                <com.woodplantation.werwolf.graphics.MyTextView
+                    android:id="@+id/text_view_group_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin_small"/>
+
+                <com.woodplantation.werwolf.graphics.MyTextView
+                    android:id="@+id/text_view_group_port"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin_small"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5">
+
+                <com.woodplantation.werwolf.graphics.MyButton
+                    android:id="@+id/button_leave_lobby"
+                    android:text="@string/leave_lobby"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
 
         <ListView
             android:id="@+id/list_view_players"

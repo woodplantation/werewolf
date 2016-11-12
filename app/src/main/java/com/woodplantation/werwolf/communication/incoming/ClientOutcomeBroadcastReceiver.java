@@ -2,12 +2,8 @@ package com.woodplantation.werwolf.communication.incoming;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
-
-import com.woodplantation.werwolf.R;
 
 /**
  * Created by Sebu on 02.11.2016.

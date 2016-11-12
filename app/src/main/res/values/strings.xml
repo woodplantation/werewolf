@@ -22,6 +22,7 @@
     <string name="create_group_success">Die Lobby wurde erfolgreich erstellt.</string>
     <string name="adress_x">Adresse: %1$s</string>
     <string name="port_x">Port: %1$d</string>
+    <string name="leave_lobby">Lobby verlassen</string>
 
     <!-- - - - - - - - - - - - - - WikiAcitvity - - - - - - - - - - - - - -->
     <string name="roles">Die Rollen</string>
@@ -65,5 +66,9 @@
     <string name="settings_players">Anzahl Spieler:</string>
     <string name="settings_werewolf">Werwölfe:</string>
     <string name="settings_role_info">Alle Sonderrollen sind gleichzeitig Dorfbewohner.</string>
+
+    <!-- - - - - - - - - - - - - - Notification - - - - - - - - - - - - - -->
+    <string name="notification_title">Spiel aktiv</string>
+    <string name="notification_text">Du bist gerade in einem Werwolf-Spiel!</string>
 
 </resources>

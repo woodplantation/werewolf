@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
@@ -28,6 +29,13 @@ public abstract class OutcomeBroadcastReceiver extends BroadcastReceiver {
 
     public OutcomeBroadcastReceiver(Activity activity) {
         this.activity = activity;
+    }
+
+    public IntentFilter getIntentFilter() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(PLAYER_LIST_CHANGED);
+        filter.addAction(SERVICE_STOPPED_SHOW_DIALOG_FINISH_ACTIVITY);
+        return filter;
     }
 
     @Override

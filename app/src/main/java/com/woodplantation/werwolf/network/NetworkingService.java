@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.woodplantation.werwolf.Notification;
 import com.woodplantation.werwolf.communication.outgoing.ClientOutcomeBroadcastSender;
 import com.woodplantation.werwolf.communication.outgoing.OutcomeBroadcastSender;
 import com.woodplantation.werwolf.communication.outgoing.ServerOutcomeBroadcastSender;
@@ -93,18 +94,22 @@ public abstract class NetworkingService extends Service {
     @Override
     public void onDestroy() {
         Log.v("Networking","onDestroy");
+        finish = true;
         for (AsyncTask task : tasks) {
             task.cancel(true);
         }
         unregisterReceiver(receiver);
         mManager.cancelConnect(mChannel, null);
         mManager.removeGroup(mChannel, null);
+        Notification.deleteNotification(this);
         super.onDestroy();
     }
 
     public int onStartCommand(Intent intent, int flags, int startId, boolean server) {
         super.onStartCommand(intent, flags, startId);
         if (!running) {
+            Notification.createNotification(this);
+
             if (server) {
                 outcomeBroadcastSender = new ServerOutcomeBroadcastSender((Server) this);
                 receiver = ((Server) this).new WifiP2pBroadcastReceiver();

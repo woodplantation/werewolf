@@ -19,10 +19,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.woodplantation.werwolf.Notification;
 import com.woodplantation.werwolf.R;
 import com.woodplantation.werwolf.Wiki.RegelnActivity;
 import com.woodplantation.werwolf.Wiki.RollenActivity;
 import com.woodplantation.werwolf.communication.incoming.OutcomeBroadcastReceiver;
+import com.woodplantation.werwolf.graphics.MyButton;
 import com.woodplantation.werwolf.graphics.MyTextView;
 import com.woodplantation.werwolf.network.Client;
 import com.woodplantation.werwolf.communication.incoming.ClientOutcomeBroadcastReceiver;
@@ -46,7 +48,7 @@ public class LobbyActivity extends AppCompatActivity {
     private boolean server;
 
     private LocalBroadcastManager localBroadcastManager;
-    private BroadcastReceiver outcomeBroadcastReceiver;
+    private OutcomeBroadcastReceiver outcomeBroadcastReceiver;
     private IntentFilter intentFilter;
 
     private ListView listViewPlayers;
@@ -70,43 +72,53 @@ public class LobbyActivity extends AppCompatActivity {
             }
         });
 
-        server = getIntent().getBooleanExtra(EXTRA_IS_SERVER, false);
-
         initGraphics();
 
-        initNetworkingService();
+        if (getIntent().getBooleanExtra(Notification.INTENT_COMING_FROM_NOTIFICATION, false)) {
+            //TODO coming from notification. 
+        } else {
+            server = getIntent().getBooleanExtra(EXTRA_IS_SERVER, false);
+
+            initNetworkingService();
+        }
     }
 
     private void initGraphics() {
         listViewPlayers = (ListView) findViewById(R.id.list_view_players);
         listViewPlayers.setAdapter(new ArrayAdapter<String>(this, R.layout.textview, players));
+
+        MyButton leaveButton = (MyButton) findViewById(R.id.button_leave_lobby);
+        leaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopService(serviceIntent);
+                finish();
+            }
+        });
     }
 
     private void initNetworkingService() {
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        intentFilter = new IntentFilter();
-        intentFilter.addAction(OutcomeBroadcastReceiver.PLAYER_LIST_CHANGED);
-        intentFilter.addAction(OutcomeBroadcastReceiver.SERVICE_STOPPED_SHOW_DIALOG_FINISH_ACTIVITY);
         Intent intent = getIntent();
         if (server) {
             initServer();
         } else {
             initClient(intent);
         }
-        if (serviceIntent != null) {
-            String displayName = intent.getStringExtra(EXTRA_DISPLAYNAME);
-            serviceIntent.putExtra(NetworkingService.EXTRA_INITIALIZE_DISPLAYNAME, displayName);
-            serviceIntent.setAction(NetworkingService.COMMAND_INITIALIZE);
 
-            Log.d("Lobby","startin intent.");
-            startService(serviceIntent);
-        }
+        intentFilter = outcomeBroadcastReceiver.getIntentFilter();
+
+        String displayName = intent.getStringExtra(EXTRA_DISPLAYNAME);
+        serviceIntent.putExtra(NetworkingService.EXTRA_INITIALIZE_DISPLAYNAME, displayName);
+        serviceIntent.setAction(NetworkingService.COMMAND_INITIALIZE);
+
+        Log.d("Lobby","startin intent.");
+        startService(serviceIntent);
     }
 
     private void initServer() {
         Log.d("Lobby","init server.");
         outcomeBroadcastReceiver = new ServerOutcomeBroadcastReceiver(this);
-        intentFilter.addAction(ServerOutcomeBroadcastReceiver.LOBBY_CREATE);
 
         serviceIntent = new Intent(this, Server.class);
     }
@@ -151,12 +163,14 @@ public class LobbyActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
+        Log.d("LobbyActivity","onresume");
         super.onResume();
         localBroadcastManager.registerReceiver(outcomeBroadcastReceiver, intentFilter);
     }
 
     @Override
     public void onStop() {
+        Log.d("LobbyActivity","onstop");
         super.onStop();
         localBroadcastManager.unregisterReceiver(outcomeBroadcastReceiver);
     }
@@ -164,7 +178,6 @@ public class LobbyActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         Log.d("LobbyActivity","onDestroy");
-        stopService(serviceIntent);
         super.onDestroy();
     }
 

@@ -3,6 +3,7 @@ package com.woodplantation.werwolf.communication.incoming;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.util.Log;
 
 import com.woodplantation.werwolf.activities.LobbyActivity;
@@ -20,6 +21,13 @@ public class ServerOutcomeBroadcastReceiver extends OutcomeBroadcastReceiver{
 
     public ServerOutcomeBroadcastReceiver(Activity activity) {
         super(activity);
+    }
+
+    @Override
+    public IntentFilter getIntentFilter() {
+        IntentFilter filter = super.getIntentFilter();
+        filter.addAction(LOBBY_CREATE);
+        return filter;
     }
 
     @Override
