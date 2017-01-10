@@ -33,57 +33,24 @@ public abstract class NetworkingService extends Service {
     public static final String COMMAND_INITIALIZE = "initialize";
     public static final String EXTRA_INITIALIZE_DISPLAYNAME = "extra_" + COMMAND_INITIALIZE + "_displayname";
 
-    //Object for commands sent via network, from server to client or client to server.
-    enum NetworkCommandType {
-        CLIENT_SERVER_DISPLAYNAME, SERVER_CLIENT_SHUTDOWN, SERVER_CLIENT_DISPLAYNAMES
-    }
-    class NetworkCommand implements Serializable {
-        static final long serialVersionUID = -3469314080315513889L;
-        NetworkCommandType type;
-        String string;
+    WifiP2pManager mManager;
+    WifiP2pManager.Channel mChannel;
+    BroadcastReceiver receiver;
 
-        NetworkCommand() {
-        }
+    WifiP2pManager.PeerListListener peerListListener;
 
-        NetworkCommand(String json) {
-            try {
-                JSONObject object = new JSONObject(json);
-                type = NetworkCommandType.valueOf(object.getString("type"));
-                string = object.getString("string");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+    boolean running = false;
+    boolean firstRun = true;
+    boolean connected = false;
+    boolean finish = false;
+    String action;
 
-        String toJsonString() {
-            try {
-                JSONObject object = new JSONObject();
-                object.put("type", type);
-                object.put("string", string);
-                return object.toString() + "\n";
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
+    OutcomeBroadcastSender outcomeBroadcastSender;
 
-    protected WifiP2pManager mManager;
-    protected WifiP2pManager.Channel mChannel;
-    protected BroadcastReceiver receiver;
-
-    protected boolean running = false;
-    protected boolean firstRun = true;
-    protected boolean connected = false;
-    protected boolean finish = false;
-    protected String action;
-
-    protected OutcomeBroadcastSender outcomeBroadcastSender;
-
-    protected String displayName;
+    String displayName;
 
     //List of all tasks, that this service executes. should all be cancelled when service stops
-    protected ArrayList<AsyncTask> tasks = new ArrayList<>();
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Nullable
     @Override
@@ -110,13 +77,6 @@ public abstract class NetworkingService extends Service {
         if (!running) {
             Notification.createNotification(this);
 
-            if (server) {
-                outcomeBroadcastSender = new ServerOutcomeBroadcastSender((Server) this);
-                receiver = ((Server) this).new WifiP2pBroadcastReceiver();
-            } else {
-                outcomeBroadcastSender = new ClientOutcomeBroadcastSender((Client) this);
-                receiver = ((Client) this).new WifiP2pBroadcastReceiver();
-            }
             running = true;
 
             IntentFilter mIntentFilter = new IntentFilter();
@@ -162,5 +122,51 @@ public abstract class NetworkingService extends Service {
         return -1;
     }
 
+    public OutcomeBroadcastSender getOutcomeBroadcastSender() {
+        return outcomeBroadcastSender;
+    }
 
+    public void setOutcomeBroadcastSender(OutcomeBroadcastSender outcomeBroadcastSender) {
+        this.outcomeBroadcastSender = outcomeBroadcastSender;
+    }
+
+    public WifiP2pManager getmManager() {
+        return mManager;
+    }
+
+    public void setmManager(WifiP2pManager mManager) {
+        this.mManager = mManager;
+    }
+
+    public WifiP2pManager.Channel getmChannel() {
+        return mChannel;
+    }
+
+    public void setmChannel(WifiP2pManager.Channel mChannel) {
+        this.mChannel = mChannel;
+    }
+
+    public ArrayList<AsyncTask> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(ArrayList<AsyncTask> tasks) {
+        this.tasks = tasks;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+    }
 }
