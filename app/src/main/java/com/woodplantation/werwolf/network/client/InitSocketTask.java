@@ -56,8 +56,8 @@ public class InitSocketTask extends AsyncTask<Void, Void, Boolean> {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            SendDisplaynameTask sendDisplaynameTask = new SendDisplaynameTask(client);
-            sendDisplaynameTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
+            SendDisplaynameAndIdTask sendDisplaynameAndIdTask = new SendDisplaynameAndIdTask(client);
+            sendDisplaynameAndIdTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
         }
     }
 }

@@ -4,7 +4,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.woodplantation.werwolf.network.NetworkCommand;
+import com.woodplantation.werwolf.network.NetworkCommandType;
 import com.woodplantation.werwolf.network.Server;
+import com.woodplantation.werwolf.network.objects.DisplaynameAndId;
 
 import java.io.IOException;
 
@@ -12,11 +14,11 @@ import java.io.IOException;
  * Created by Sebu on 10.01.2017.
  */
 
-class GetDisplaynameTask extends AsyncTask<Integer,Void,Boolean> {
+class GetDisplaynameAndIdTask extends AsyncTask<Integer,Void,Boolean> {
 
     private Server server;
 
-    GetDisplaynameTask(Server server) {
+    GetDisplaynameAndIdTask(Server server) {
         this.server = server;
     }
 
@@ -27,8 +29,13 @@ class GetDisplaynameTask extends AsyncTask<Integer,Void,Boolean> {
         try {
             String line = server.getClients().get(params[0]).in.readLine();
             Log.d("Server","get displayname task read: " + line);
-            NetworkCommand command = new NetworkCommand(line);
-            server.getClients().get(params[0]).displayname = command.string;
+            NetworkCommand networkCommand = new NetworkCommand(line);
+            if (networkCommand.type != NetworkCommandType.CLIENT_SERVER_DISPLAYNAME) {
+                return false;
+            }
+            DisplaynameAndId command = (DisplaynameAndId) networkCommand.command;
+            server.getClients().get(params[0]).displayname = command.displayname;
+            server.getClients().get(params[0]).id = command.id;
             return true;
         } catch (IOException e) {
             e.printStackTrace();

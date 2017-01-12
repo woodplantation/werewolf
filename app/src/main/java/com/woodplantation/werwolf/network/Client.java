@@ -10,6 +10,8 @@ import com.woodplantation.werwolf.communication.outgoing.ClientOutcomeBroadcastS
 import com.woodplantation.werwolf.network.client.InitSocketTask;
 import com.woodplantation.werwolf.network.client.PeerListListener;
 import com.woodplantation.werwolf.network.client.WifiP2pBroadcastReceiver;
+import com.woodplantation.werwolf.network.objects.DisplaynameAndId;
+import com.woodplantation.werwolf.network.objects.DisplaynameAndIdList;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
@@ -31,7 +33,7 @@ public class Client extends NetworkingService {
     private int groupOwnerPort;
     private InetAddress groupOwnerAddress;
 
-    private ArrayList<String> displayNames = new ArrayList<>();
+    private DisplaynameAndIdList displaynameAndIdList = new DisplaynameAndIdList();
 
     private Socket socket;
     private PrintWriter out;
@@ -118,14 +120,6 @@ public class Client extends NetworkingService {
         this.groupOwnerAddress = groupOwnerAddress;
     }
 
-    public ArrayList<String> getDisplayNames() {
-        return displayNames;
-    }
-
-    public void setDisplayNames(ArrayList<String> displayNames) {
-        this.displayNames = displayNames;
-    }
-
     public Socket getSocket() {
         return socket;
     }
@@ -148,5 +142,13 @@ public class Client extends NetworkingService {
 
     public void setIn(BufferedReader in) {
         this.in = in;
+    }
+
+    public DisplaynameAndIdList getDisplaynameAndIdList() {
+        return displaynameAndIdList;
+    }
+
+    public void setDisplaynameAndIdList(DisplaynameAndIdList displaynameAndIdList) {
+        this.displaynameAndIdList = displaynameAndIdList;
     }
 }

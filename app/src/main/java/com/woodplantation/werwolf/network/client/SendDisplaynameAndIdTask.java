@@ -3,19 +3,21 @@ package com.woodplantation.werwolf.network.client;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.woodplantation.werwolf.Installation;
 import com.woodplantation.werwolf.network.Client;
 import com.woodplantation.werwolf.network.NetworkCommand;
 import com.woodplantation.werwolf.network.NetworkCommandType;
+import com.woodplantation.werwolf.network.objects.DisplaynameAndId;
 
 /**
  * Created by Sebu on 10.01.2017.
  */
 
-class SendDisplaynameTask extends AsyncTask<Void, Void, Void> {
+class SendDisplaynameAndIdTask extends AsyncTask<Void, Void, Void> {
 
     private Client client;
 
-    SendDisplaynameTask(Client client) {
+    SendDisplaynameAndIdTask(Client client) {
         this.client = client;
     }
 
@@ -25,11 +27,11 @@ class SendDisplaynameTask extends AsyncTask<Void, Void, Void> {
 
         Log.d("Client", "send displayname task");
 
-        NetworkCommand command = new NetworkCommand();
-        command.type = NetworkCommandType.CLIENT_SERVER_DISPLAYNAME;
-        command.string = client.getDisplayName();
-        client.getOut().println(command.toJsonString());
-        Log.d("Client", "writing: " + command.toJsonString());
+        NetworkCommand networkCommand = new NetworkCommand();
+        networkCommand.type = NetworkCommandType.CLIENT_SERVER_DISPLAYNAME;
+        networkCommand.command = client.getDisplaynameAndId();
+        client.getOut().println(networkCommand.toJsonString());
+        Log.d("Client", "writing: " + networkCommand.toJsonString());
 
         client.getTasks().remove(this);
         return null;

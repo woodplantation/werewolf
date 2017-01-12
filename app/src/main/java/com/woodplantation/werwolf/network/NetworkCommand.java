@@ -1,8 +1,16 @@
 package com.woodplantation.werwolf.network;
 
+import com.woodplantation.werwolf.network.objects.Command;
+import com.woodplantation.werwolf.util.Serializer;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -13,8 +21,10 @@ import java.io.Serializable;
 
 public class NetworkCommand implements Serializable {
     static final long serialVersionUID = -3469314080315513889L;
+    private static String TYPE = "type";
+    private static String COMMAND = "command";
     public NetworkCommandType type;
-    public String string;
+    public Command command;
 
     public NetworkCommand() {
     }
@@ -22,8 +32,8 @@ public class NetworkCommand implements Serializable {
     public NetworkCommand(String json) {
         try {
             JSONObject object = new JSONObject(json);
-            type = NetworkCommandType.valueOf(object.getString("type"));
-            string = object.getString("string");
+            type = NetworkCommandType.valueOf(object.getString(TYPE));
+            command = (Command) Serializer.deserialize(object.getString(COMMAND));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -32,12 +42,12 @@ public class NetworkCommand implements Serializable {
     public String toJsonString() {
         try {
             JSONObject object = new JSONObject();
-            object.put("type", type);
-            object.put("string", string);
+            object.put(TYPE, type);
+            object.put(COMMAND, Serializer.serialize(command));
             return object.toString() + "\n";
         } catch (JSONException e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 }

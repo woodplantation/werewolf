@@ -15,6 +15,7 @@ import com.woodplantation.werwolf.Notification;
 import com.woodplantation.werwolf.communication.outgoing.ClientOutcomeBroadcastSender;
 import com.woodplantation.werwolf.communication.outgoing.OutcomeBroadcastSender;
 import com.woodplantation.werwolf.communication.outgoing.ServerOutcomeBroadcastSender;
+import com.woodplantation.werwolf.network.objects.DisplaynameAndId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +33,7 @@ public abstract class NetworkingService extends Service {
     //Commands that can be sent as intents
     public static final String COMMAND_INITIALIZE = "initialize";
     public static final String EXTRA_INITIALIZE_DISPLAYNAME = "extra_" + COMMAND_INITIALIZE + "_displayname";
+    public static final String EXTRA_INITIALIZE_ID = "extra_" + COMMAND_INITIALIZE + "_id";
 
     WifiP2pManager mManager;
     WifiP2pManager.Channel mChannel;
@@ -47,7 +49,7 @@ public abstract class NetworkingService extends Service {
 
     OutcomeBroadcastSender outcomeBroadcastSender;
 
-    String displayName;
+    DisplaynameAndId displaynameAndId = new DisplaynameAndId();
 
     //List of all tasks, that this service executes. should all be cancelled when service stops
     ArrayList<AsyncTask> tasks = new ArrayList<>();
@@ -112,8 +114,9 @@ public abstract class NetworkingService extends Service {
         }
 
         if (action.equals(COMMAND_INITIALIZE)) {
-            displayName = intent.getStringExtra(EXTRA_INITIALIZE_DISPLAYNAME);
-            if (displayName == null) {
+            displaynameAndId.displayname = intent.getStringExtra(EXTRA_INITIALIZE_DISPLAYNAME);
+            displaynameAndId.id = intent.getStringExtra(EXTRA_INITIALIZE_ID);
+            if (displaynameAndId.displayname == null || displaynameAndId.id == null) {
                 outcomeBroadcastSender.serviceStoppedShowDialogFinishActivity("Fehler beim Einlesen des Anzeigenamens.");
                 stopSelf();
                 return START_STICKY;
@@ -126,40 +129,16 @@ public abstract class NetworkingService extends Service {
         return outcomeBroadcastSender;
     }
 
-    public void setOutcomeBroadcastSender(OutcomeBroadcastSender outcomeBroadcastSender) {
-        this.outcomeBroadcastSender = outcomeBroadcastSender;
-    }
-
     public WifiP2pManager getmManager() {
         return mManager;
-    }
-
-    public void setmManager(WifiP2pManager mManager) {
-        this.mManager = mManager;
     }
 
     public WifiP2pManager.Channel getmChannel() {
         return mChannel;
     }
 
-    public void setmChannel(WifiP2pManager.Channel mChannel) {
-        this.mChannel = mChannel;
-    }
-
     public ArrayList<AsyncTask> getTasks() {
         return tasks;
-    }
-
-    public void setTasks(ArrayList<AsyncTask> tasks) {
-        this.tasks = tasks;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
     }
 
     public boolean isConnected() {
@@ -168,5 +147,9 @@ public abstract class NetworkingService extends Service {
 
     public void setConnected(boolean connected) {
         this.connected = connected;
+    }
+
+    public DisplaynameAndId getDisplaynameAndId() {
+        return displaynameAndId;
     }
 }

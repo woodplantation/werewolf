@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.woodplantation.werwolf.Installation;
 import com.woodplantation.werwolf.Notification;
 import com.woodplantation.werwolf.R;
 import com.woodplantation.werwolf.Wiki.RegelnActivity;
@@ -31,6 +32,8 @@ import com.woodplantation.werwolf.communication.incoming.ClientOutcomeBroadcastR
 import com.woodplantation.werwolf.network.NetworkingService;
 import com.woodplantation.werwolf.network.Server;
 import com.woodplantation.werwolf.communication.incoming.ServerOutcomeBroadcastReceiver;
+import com.woodplantation.werwolf.network.objects.DisplaynameAndId;
+import com.woodplantation.werwolf.network.objects.DisplaynameAndIdList;
 
 import java.util.ArrayList;
 
@@ -52,7 +55,7 @@ public class LobbyActivity extends AppCompatActivity {
     private IntentFilter intentFilter;
 
     private ListView listViewPlayers;
-    private ArrayList<String> players = new ArrayList<>();
+    private ArrayList<DisplaynameAndId> players = new ArrayList<>();
 
     private Intent serviceIntent;
 
@@ -84,8 +87,9 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void initGraphics() {
+        //TODO server can click on client and kick him
         listViewPlayers = (ListView) findViewById(R.id.list_view_players);
-        listViewPlayers.setAdapter(new ArrayAdapter<String>(this, R.layout.textview, players));
+        listViewPlayers.setAdapter(new ArrayAdapter<String>(this, R.layout.textview, new ArrayList<String>()));
 
         MyButton leaveButton = (MyButton) findViewById(R.id.button_leave_lobby);
         leaveButton.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +114,7 @@ public class LobbyActivity extends AppCompatActivity {
 
         String displayName = intent.getStringExtra(EXTRA_DISPLAYNAME);
         serviceIntent.putExtra(NetworkingService.EXTRA_INITIALIZE_DISPLAYNAME, displayName);
+        serviceIntent.putExtra(NetworkingService.EXTRA_INITIALIZE_ID, Installation.id(this));
         serviceIntent.setAction(NetworkingService.COMMAND_INITIALIZE);
 
         Log.d("Lobby","startin intent.");
@@ -204,10 +209,14 @@ public class LobbyActivity extends AppCompatActivity {
         }
     }
 
-    public void playerListChanged(ArrayList<String> list) {
-        players = list;
+    public void playerListChanged(DisplaynameAndIdList list) {
+        players = list.list;
+        ArrayList<String> names = new ArrayList<String>();
+        for (DisplaynameAndId player : players) {
+            names.add(player.displayname);
+        }
         ((ArrayAdapter<String>) listViewPlayers.getAdapter()).clear();
-        ((ArrayAdapter<String>) listViewPlayers.getAdapter()).addAll(list);
+        ((ArrayAdapter<String>) listViewPlayers.getAdapter()).addAll(names);
         ((ArrayAdapter<String>) listViewPlayers.getAdapter()).notifyDataSetChanged();
     }
 

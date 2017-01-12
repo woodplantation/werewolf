@@ -79,7 +79,7 @@ public class CollectingClientsTask extends AsyncTask<Void, Void, Socket> {
             server.getClients().add(clientInfo);
 
             //start task for getting displayname from client
-            GetDisplaynameTask getDisplaynameTask = new GetDisplaynameTask(server);
-            getDisplaynameTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, server.getClients().indexOf(clientInfo));
+            GetDisplaynameAndIdTask getDisplaynameAndIdTask = new GetDisplaynameAndIdTask(server);
+            getDisplaynameAndIdTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, server.getClients().indexOf(clientInfo));
         }
 }

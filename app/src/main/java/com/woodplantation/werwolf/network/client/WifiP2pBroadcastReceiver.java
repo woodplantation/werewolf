@@ -1,16 +1,11 @@
 package com.woodplantation.werwolf.network.client;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.NetworkInfo;
-import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
 import com.woodplantation.werwolf.network.Client;
-import com.woodplantation.werwolf.network.WifiP2pBroadcastReceiver;
 
 /**
  * Created by Sebu on 10.01.2017.

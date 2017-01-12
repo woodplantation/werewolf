@@ -13,4 +13,5 @@ public class ClientInfo {
     public BufferedReader in;
     public PrintWriter out;
     public String displayname;
+    public String id;
 }

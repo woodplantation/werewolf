@@ -6,6 +6,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.woodplantation.werwolf.communication.incoming.OutcomeBroadcastReceiver;
+import com.woodplantation.werwolf.network.objects.DisplaynameAndIdList;
+import com.woodplantation.werwolf.util.Serializer;
 
 import java.util.ArrayList;
 
@@ -23,11 +25,11 @@ public abstract class OutcomeBroadcastSender {
         this.service = service;
     }
 
-    public void playerListChanged(ArrayList<String> list) {
-        Log.d("OutcomeBS","playerlist changed. list : " + list);
+    public void playerListChanged(DisplaynameAndIdList displaynameAndIdList) {
+        Log.d("OutcomeBS","playerlist changed. list : " + displaynameAndIdList.list);
         Intent intent = new Intent(OutcomeBroadcastReceiver.PLAYER_LIST_CHANGED);
         intent.setClass(service, OutcomeBroadcastReceiver.class);
-        intent.putStringArrayListExtra(OutcomeBroadcastReceiver.EXTRA_PLAYER_LIST_CHANGED, list);
+        intent.putExtra(OutcomeBroadcastReceiver.EXTRA_PLAYER_LIST_CHANGED, Serializer.serialize(displaynameAndIdList));
         localBroadcastManager.sendBroadcast(intent);
     }
 

@@ -5,10 +5,14 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.os.AsyncTask;
 
 import com.woodplantation.werwolf.communication.outgoing.ServerOutcomeBroadcastSender;
+import com.woodplantation.werwolf.network.objects.DisplaynameAndId;
+import com.woodplantation.werwolf.network.objects.DisplaynameAndIdList;
+import com.woodplantation.werwolf.network.objects.KickedInformation;
 import com.woodplantation.werwolf.network.server.ClientInfo;
 import com.woodplantation.werwolf.network.server.CollectingClientsTask;
 import com.woodplantation.werwolf.network.server.PeerListListener;
-import com.woodplantation.werwolf.network.server.SendPlayerListTask;
+import com.woodplantation.werwolf.network.server.SendDisplaynameAndIdListTask;
+import com.woodplantation.werwolf.network.server.SendKickedInformationTask;
 import com.woodplantation.werwolf.network.server.WifiP2pBroadcastReceiver;
 
 import java.io.IOException;
@@ -23,7 +27,8 @@ public class Server extends NetworkingService {
 
     //Commands that can be sent as intents
     public static final String COMMAND_KICK_PLAYER = "kick_player";
-    public static final String EXTRA_KICK_PLAYER_PLAYER = "extra_" + COMMAND_KICK_PLAYER + "_player";
+    public static final String EXTRA_KICK_PLAYER_PLAYERID = "extra_" + COMMAND_KICK_PLAYER + "_playerid";
+    public static final String EXTRA_KICK_PLAYER_MESSAGE = "extra_" + COMMAND_KICK_PLAYER + "_message";
     public static final String COMMAND_START = "start";
 
     private String mac;
@@ -56,9 +61,26 @@ public class Server extends NetworkingService {
             }
             case COMMAND_START: {
                 started = true;
+                //TODO start readingincomingcommandstask for every client
             }
             case COMMAND_KICK_PLAYER: {
-
+                if (!started) {
+                    String id = intent.getStringExtra(EXTRA_KICK_PLAYER_PLAYERID);
+                    String message = intent.getStringExtra(EXTRA_KICK_PLAYER_MESSAGE);
+                    if (id != null && message != null) {
+                        for (ClientInfo client : clients) {
+                            if (client.id.equals(id)) {
+                                //notify client that he got kicked
+                                KickedInformation kickedInformation = new KickedInformation();
+                                kickedInformation.message = message;
+                                SendKickedInformationTask task = new SendKickedInformationTask(this, client);
+                                task.execute(kickedInformation);
+                                //remove from our list
+                                clients.remove(client);
+                            }
+                        }
+                    }
+                }
                 break;
             }
         }
@@ -92,16 +114,25 @@ public class Server extends NetworkingService {
 
 
     public void playerListChanged() {
-        ArrayList<String> list = new ArrayList<>();
-        list.add(displayName);
+        ArrayList<DisplaynameAndId> displaynameAndIds = new ArrayList<>();
+        displaynameAndIds.add(displaynameAndId);
         for (ClientInfo client : clients) {
-            if (client.displayname != null) {
-                list.add(client.displayname);
+            if (client.displayname != null && client.id != null) {
+                DisplaynameAndId displaynameAndId = new DisplaynameAndId();
+                displaynameAndId.displayname = client.displayname;
+                displaynameAndId.id = client.id;
+                displaynameAndIds.add(displaynameAndId);
             }
         }
-        outcomeBroadcastSender.playerListChanged(list);
-        SendPlayerListTask task = new SendPlayerListTask(this);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, list);
+        DisplaynameAndIdList displaynameAndIdList = new DisplaynameAndIdList();
+        displaynameAndIdList.list = displaynameAndIds;
+
+        //notify our activity
+        outcomeBroadcastSender.playerListChanged(displaynameAndIdList);
+
+        //notify clients
+        SendDisplaynameAndIdListTask task = new SendDisplaynameAndIdListTask(this);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, displaynameAndIdList);
     }
 
     public String getMac() {

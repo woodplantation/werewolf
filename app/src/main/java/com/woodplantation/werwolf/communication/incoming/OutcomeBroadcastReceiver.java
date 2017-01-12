@@ -11,6 +11,8 @@ import android.util.Log;
 
 import com.woodplantation.werwolf.R;
 import com.woodplantation.werwolf.activities.LobbyActivity;
+import com.woodplantation.werwolf.network.objects.DisplaynameAndIdList;
+import com.woodplantation.werwolf.util.Serializer;
 
 import java.util.ArrayList;
 
@@ -49,7 +51,7 @@ public abstract class OutcomeBroadcastReceiver extends BroadcastReceiver {
             case PLAYER_LIST_CHANGED: {
                 Log.d("OutcomeBR","playerlist changed.");
                 if (activity instanceof LobbyActivity) {
-                    ArrayList<String> list = intent.getStringArrayListExtra(EXTRA_PLAYER_LIST_CHANGED);
+                    DisplaynameAndIdList list = (DisplaynameAndIdList) Serializer.deserialize(intent.getStringExtra(EXTRA_PLAYER_LIST_CHANGED));
                     Log.d("OutcomeBR","playerlist correct activity. list : " + list);
                     if (list != null) {
                         ((LobbyActivity) activity).playerListChanged(list);
