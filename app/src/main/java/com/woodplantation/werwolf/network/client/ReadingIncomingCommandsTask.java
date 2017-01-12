@@ -3,7 +3,6 @@ package com.woodplantation.werwolf.network.client;
 import com.woodplantation.werwolf.network.Client;
 import com.woodplantation.werwolf.network.NetworkCommand;
 import com.woodplantation.werwolf.network.NetworkingService;
-import com.woodplantation.werwolf.network.ReadingIncomingCommandsTask;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
@@ -13,14 +12,14 @@ import java.util.Arrays;
  * Created by Sebu on 10.01.2017.
  */
 
-public class ClientHelperReadingIncomingCommandsTask extends ReadingIncomingCommandsTask {
+public class ReadingIncomingCommandsTask extends com.woodplantation.werwolf.network.ReadingIncomingCommandsTask {
 
-    public ClientHelperReadingIncomingCommandsTask(NetworkingService client) {
-        super(client, ((Client) client).getIn(), ClientHelperReadingIncomingCommandsTask.class);
+    public ReadingIncomingCommandsTask(NetworkingService client) {
+        super(client, ((Client) client).getIn(), ReadingIncomingCommandsTask.class);
     }
 
     //used for self restart in superclass
-    ClientHelperReadingIncomingCommandsTask(NetworkingService client, BufferedReader in, Class<? extends ReadingIncomingCommandsTask> taskClass) {
+    ReadingIncomingCommandsTask(NetworkingService client, BufferedReader in, Class<? extends com.woodplantation.werwolf.network.ReadingIncomingCommandsTask> taskClass) {
         super(client, in, taskClass);
     }
 

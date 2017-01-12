@@ -24,7 +24,7 @@ public class ConnectionInfoListener implements WifiP2pManager.ConnectionInfoList
         Log.d("Client", "connection info listener on connection info available");
         // InetAddress from WifiP2pInfo struct.
         client.setGroupOwnerAddress(info.groupOwnerAddress);
-        ClientHelperInitSocketTask clientHelperInitSocketTask = new ClientHelperInitSocketTask(client);
-        clientHelperInitSocketTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        InitSocketTask initSocketTask = new InitSocketTask(client);
+        initSocketTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 }

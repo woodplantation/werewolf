@@ -7,9 +7,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.woodplantation.werwolf.communication.outgoing.ClientOutcomeBroadcastSender;
-import com.woodplantation.werwolf.network.client.ClientHelperInitSocketTask;
-import com.woodplantation.werwolf.network.client.ClientHelperPeerListListener;
-import com.woodplantation.werwolf.network.client.ClientHelperWifiP2pBroadcastReceiver;
+import com.woodplantation.werwolf.network.client.InitSocketTask;
+import com.woodplantation.werwolf.network.client.PeerListListener;
+import com.woodplantation.werwolf.network.client.WifiP2pBroadcastReceiver;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
@@ -42,8 +42,8 @@ public class Client extends NetworkingService {
         //start with initializing important stuff before calling super
         if (!running) {
             outcomeBroadcastSender = new ClientOutcomeBroadcastSender(this);
-            receiver = new ClientHelperWifiP2pBroadcastReceiver(this);
-            peerListListener = new ClientHelperPeerListListener(this);
+            receiver = new WifiP2pBroadcastReceiver(this);
+            peerListListener = new PeerListListener(this);
         }
 
         //call super now after important stuff initialized
@@ -89,8 +89,8 @@ public class Client extends NetworkingService {
             Log.d("Client","connection info listener on connection info available");
             // InetAddress from WifiP2pInfo struct.
             groupOwnerAddress = info.groupOwnerAddress;
-            ClientHelperInitSocketTask clientHelperInitSocketTask = new ClientHelperInitSocketTask(Client.this);
-            clientHelperInitSocketTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            InitSocketTask initSocketTask = new InitSocketTask(Client.this);
+            initSocketTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     };
 

@@ -12,11 +12,11 @@ import java.io.IOException;
  * Created by Sebu on 10.01.2017.
  */
 
-class ServerHelperGetDisplaynameTask extends AsyncTask<Integer,Void,Boolean> {
+class GetDisplaynameTask extends AsyncTask<Integer,Void,Boolean> {
 
     private Server server;
 
-    ServerHelperGetDisplaynameTask(Server server) {
+    GetDisplaynameTask(Server server) {
         this.server = server;
     }
 

@@ -13,11 +13,11 @@ import com.woodplantation.werwolf.network.Client;
  * Created by Sebu on 10.01.2017.
  */
 
-public class ClientHelperPeerListListener implements WifiP2pManager.PeerListListener {
+public class PeerListListener implements WifiP2pManager.PeerListListener {
 
     private Client client;
 
-    public ClientHelperPeerListListener(Client client) {
+    public PeerListListener(Client client) {
         this.client = client;
     }
 

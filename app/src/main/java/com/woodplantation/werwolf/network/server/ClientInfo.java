@@ -8,7 +8,7 @@ import java.net.Socket;
  * Created by Sebu on 10.01.2017.
  */
 
-public class ServerHelperClientInfo {
+public class ClientInfo {
     public Socket socket;
     public BufferedReader in;
     public PrintWriter out;

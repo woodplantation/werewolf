@@ -5,5 +5,5 @@ package com.woodplantation.werwolf.network;
  */
 
 public enum NetworkCommandType {
-        CLIENT_SERVER_DISPLAYNAME, SERVER_CLIENT_SHUTDOWN, NetworkCommandType, SERVER_CLIENT_DISPLAYNAMES
+        CLIENT_SERVER_DISPLAYNAME, SERVER_CLIENT_SHUTDOWN, SERVER_CLIENT_DISPLAYNAMES
 }

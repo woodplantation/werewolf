@@ -15,11 +15,11 @@ import java.net.Socket;
  * Created by Sebu on 10.01.2017.
  */
 
-public class ClientHelperInitSocketTask extends AsyncTask<Void, Void, Boolean> {
+public class InitSocketTask extends AsyncTask<Void, Void, Boolean> {
 
     private Client client;
 
-    public ClientHelperInitSocketTask(Client client) {
+    public InitSocketTask(Client client) {
         this.client = client;
     }
 
@@ -46,7 +46,7 @@ public class ClientHelperInitSocketTask extends AsyncTask<Void, Void, Boolean> {
             client.stopSelf();
         } else {
             //start reading
-            ClientHelperReadingIncomingCommandsTask readingIncomingCommandsTask = new ClientHelperReadingIncomingCommandsTask(client);
+            ReadingIncomingCommandsTask readingIncomingCommandsTask = new ReadingIncomingCommandsTask(client);
             readingIncomingCommandsTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
 
             //send displayname
@@ -56,8 +56,8 @@ public class ClientHelperInitSocketTask extends AsyncTask<Void, Void, Boolean> {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            ClientHelperSendDisplaynameTask clientHelperSendDisplaynameTask = new ClientHelperSendDisplaynameTask(client);
-            clientHelperSendDisplaynameTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
+            SendDisplaynameTask sendDisplaynameTask = new SendDisplaynameTask(client);
+            sendDisplaynameTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
         }
     }
 }

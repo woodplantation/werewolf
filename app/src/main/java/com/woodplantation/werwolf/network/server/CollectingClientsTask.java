@@ -17,11 +17,11 @@ import java.net.Socket;
  * Created by Sebu on 10.01.2017.
  */
 
-public class ServerHelperCollectingClientsTask extends AsyncTask<Void, Void, Socket> {
+public class CollectingClientsTask extends AsyncTask<Void, Void, Socket> {
 
     private Server server;
 
-    public ServerHelperCollectingClientsTask(Server server) {
+    public CollectingClientsTask(Server server) {
         this.server = server;
     }
 
@@ -56,8 +56,8 @@ public class ServerHelperCollectingClientsTask extends AsyncTask<Void, Void, Soc
             }
 
             //start new task for collecting clients
-            ServerHelperCollectingClientsTask serverHelperCollectingClientsTask = new ServerHelperCollectingClientsTask(server);
-            serverHelperCollectingClientsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            CollectingClientsTask collectingClientsTask = new CollectingClientsTask(server);
+            collectingClientsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             //get Input
             InputStream inputStream;
@@ -72,14 +72,14 @@ public class ServerHelperCollectingClientsTask extends AsyncTask<Void, Void, Soc
             //save client, input and output in list
             BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
             PrintWriter out = new PrintWriter(outputStream, true);
-            ServerHelperClientInfo clientInfo = new ServerHelperClientInfo();
+            ClientInfo clientInfo = new ClientInfo();
             clientInfo.socket = result;
             clientInfo.in = in;
             clientInfo.out = out;
             server.getClients().add(clientInfo);
 
             //start task for getting displayname from client
-            ServerHelperGetDisplaynameTask getDisplaynameTask = new ServerHelperGetDisplaynameTask(server);
+            GetDisplaynameTask getDisplaynameTask = new GetDisplaynameTask(server);
             getDisplaynameTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, server.getClients().indexOf(clientInfo));
         }
 }

@@ -13,11 +13,11 @@ import java.util.ArrayList;
  * Created by Sebu on 10.01.2017.
  */
 
-public class ServerHelperSendPlayerListTask extends AsyncTask<ArrayList<String>,Void,Void> {
+public class SendPlayerListTask extends AsyncTask<ArrayList<String>,Void,Void> {
 
     private Server server;
 
-    public ServerHelperSendPlayerListTask(Server server) {
+    public SendPlayerListTask(Server server) {
         this.server = server;
     }
 
@@ -29,7 +29,7 @@ public class ServerHelperSendPlayerListTask extends AsyncTask<ArrayList<String>,
         NetworkCommand command = new NetworkCommand();
         command.type = NetworkCommandType.SERVER_CLIENT_DISPLAYNAMES;
         command.string = params[0].toString();
-        for (ServerHelperClientInfo client : server.getClients()) {
+        for (ClientInfo client : server.getClients()) {
             Log.d("Server","sending : " + command.toJsonString());
             client.out.println(command.toJsonString());
         }

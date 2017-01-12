@@ -10,11 +10,11 @@ import com.woodplantation.werwolf.network.Server;
  * Created by Sebu on 10.01.2017.
  */
 
-public class ServerHelperPeerListListener implements WifiP2pManager.PeerListListener {
+public class PeerListListener implements WifiP2pManager.PeerListListener {
 
     private Server server;
 
-    public ServerHelperPeerListListener(Server server) {
+    public PeerListListener(Server server) {
         this.server = server;
     }
 

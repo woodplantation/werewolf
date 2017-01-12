@@ -11,11 +11,11 @@ import com.woodplantation.werwolf.network.NetworkCommandType;
  * Created by Sebu on 10.01.2017.
  */
 
-class ClientHelperSendDisplaynameTask extends AsyncTask<Void, Void, Void> {
+class SendDisplaynameTask extends AsyncTask<Void, Void, Void> {
 
     private Client client;
 
-    ClientHelperSendDisplaynameTask(Client client) {
+    SendDisplaynameTask(Client client) {
         this.client = client;
     }
 

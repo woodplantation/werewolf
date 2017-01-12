@@ -16,9 +16,9 @@ import com.woodplantation.werwolf.network.WifiP2pBroadcastReceiver;
  * Created by Sebu on 10.01.2017.
  */
 
-public class ClientHelperWifiP2pBroadcastReceiver extends WifiP2pBroadcastReceiver {
+public class WifiP2pBroadcastReceiver extends com.woodplantation.werwolf.network.WifiP2pBroadcastReceiver {
 
-    public ClientHelperWifiP2pBroadcastReceiver(Client client) {
+    public WifiP2pBroadcastReceiver(Client client) {
         networkingService = client;
     }
 

@@ -5,11 +5,11 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.os.AsyncTask;
 
 import com.woodplantation.werwolf.communication.outgoing.ServerOutcomeBroadcastSender;
-import com.woodplantation.werwolf.network.server.ServerHelperClientInfo;
-import com.woodplantation.werwolf.network.server.ServerHelperCollectingClientsTask;
-import com.woodplantation.werwolf.network.server.ServerHelperPeerListListener;
-import com.woodplantation.werwolf.network.server.ServerHelperSendPlayerListTask;
-import com.woodplantation.werwolf.network.server.ServerHelperWifiP2pBroadcastReceiver;
+import com.woodplantation.werwolf.network.server.ClientInfo;
+import com.woodplantation.werwolf.network.server.CollectingClientsTask;
+import com.woodplantation.werwolf.network.server.PeerListListener;
+import com.woodplantation.werwolf.network.server.SendPlayerListTask;
+import com.woodplantation.werwolf.network.server.WifiP2pBroadcastReceiver;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -23,13 +23,13 @@ public class Server extends NetworkingService {
 
     //Commands that can be sent as intents
     public static final String COMMAND_KICK_PLAYER = "kick_player";
-    public static final String EXTRA_KICK_PLAYER_PLAYER = "kick_player_player";
+    public static final String EXTRA_KICK_PLAYER_PLAYER = "extra_" + COMMAND_KICK_PLAYER + "_player";
     public static final String COMMAND_START = "start";
 
     private String mac;
 
     private ServerSocket serverSocket;
-    private ArrayList<ServerHelperClientInfo> clients = new ArrayList<>();
+    private ArrayList<ClientInfo> clients = new ArrayList<>();
 
     private boolean started = false;
 
@@ -38,8 +38,8 @@ public class Server extends NetworkingService {
         //start with initializing important stuff before calling super
         if (!running) {
             outcomeBroadcastSender = new ServerOutcomeBroadcastSender(this);
-            receiver = new ServerHelperWifiP2pBroadcastReceiver(this);
-            peerListListener = new ServerHelperPeerListListener(this);
+            receiver = new WifiP2pBroadcastReceiver(this);
+            peerListListener = new PeerListListener(this);
         }
 
         //call super now after important stuff initialized
@@ -83,8 +83,8 @@ public class Server extends NetworkingService {
             serverSocket = new ServerSocket(0);
             ((ServerOutcomeBroadcastSender) outcomeBroadcastSender).createLobby(mac, serverSocket.getLocalPort());
 
-            ServerHelperCollectingClientsTask serverHelperCollectingClientsTask = new ServerHelperCollectingClientsTask(this);
-            serverHelperCollectingClientsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            CollectingClientsTask collectingClientsTask = new CollectingClientsTask(this);
+            collectingClientsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,13 +94,13 @@ public class Server extends NetworkingService {
     public void playerListChanged() {
         ArrayList<String> list = new ArrayList<>();
         list.add(displayName);
-        for (ServerHelperClientInfo client : clients) {
+        for (ClientInfo client : clients) {
             if (client.displayname != null) {
                 list.add(client.displayname);
             }
         }
         outcomeBroadcastSender.playerListChanged(list);
-        ServerHelperSendPlayerListTask task = new ServerHelperSendPlayerListTask(this);
+        SendPlayerListTask task = new SendPlayerListTask(this);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, list);
     }
 
@@ -120,11 +120,11 @@ public class Server extends NetworkingService {
         this.serverSocket = serverSocket;
     }
 
-    public ArrayList<ServerHelperClientInfo> getClients() {
+    public ArrayList<ClientInfo> getClients() {
         return clients;
     }
 
-    public void setClients(ArrayList<ServerHelperClientInfo> clients) {
+    public void setClients(ArrayList<ClientInfo> clients) {
         this.clients = clients;
     }
 
